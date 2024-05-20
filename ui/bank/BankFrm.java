@@ -1,10 +1,9 @@
-package edu.mum.cs.cs525.labs.exercises.project.ui.bank;
+package bank;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowEvent;
-import javax.swing.table.DefaultTableModel;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 
 /**
  * A basic JFC based application.
