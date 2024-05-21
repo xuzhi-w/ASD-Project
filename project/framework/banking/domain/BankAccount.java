@@ -1,11 +1,7 @@
-package framework.bank.domain;
+package framework.banking.domain;
 
 import framework.domain.Account;
 import framework.domain.Customer;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 public class BankAccount extends Account {
 
@@ -31,7 +27,7 @@ public class BankAccount extends Account {
 
 	@Override
 	public void addInterest() {
-		
+
 	}
 
 
