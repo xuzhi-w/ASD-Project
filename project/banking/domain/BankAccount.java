@@ -10,8 +10,6 @@ public abstract class BankAccount extends Account {
 	public BankAccount(String accountNumber, Customer customer) {
         super(accountNumber, customer);
 	}
-	private BankingAccountDAO bankingAccountDAO;
-
 
 	@Override
 	public void transferFunds(Account toAccount, double amount, String description) {
