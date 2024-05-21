@@ -8,6 +8,7 @@ import java.util.Collection;
 
 public class BankingAccountDAO implements AccountDAO {
     Collection<Account> accountlist = new ArrayList<>();
+
     @Override
     public void saveAccount(Account account) {
         accountlist.add(account);
