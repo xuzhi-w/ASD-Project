@@ -1,4 +1,4 @@
-package framework.creditcard.data;
+package banking.data;
 
 import framework.data.AccountDAO;
 import framework.domain.Account;
@@ -6,7 +6,7 @@ import framework.domain.Account;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class CreditAccountDAO implements AccountDAO {
+public class BankingAccountDAO implements AccountDAO {
     Collection<Account> accountlist = new ArrayList<>();
     @Override
     public void saveAccount(Account account) {

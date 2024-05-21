@@ -1,4 +1,4 @@
-package framework.creditcard.domain;
+package creditcard.domain;
 
 import framework.domain.Account;
 import framework.domain.Customer;

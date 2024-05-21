@@ -1,4 +1,4 @@
-package framework.creditcard.service;
+package banking.service;
 
 import framework.domain.Account;
 import framework.domain.Customer;
@@ -7,7 +7,8 @@ import framework.service.AccountService;
 import java.util.Collection;
 import java.util.List;
 
-public class CreditCardService implements AccountService {
+public class BankAccountService implements AccountService {
+
     @Override
     public Account createAccount(String accountNumber, Customer customer, String accountType) {
         return null;

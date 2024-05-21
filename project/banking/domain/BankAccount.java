@@ -1,4 +1,4 @@
-package framework.banking.domain;
+package banking.domain;
 
 import framework.domain.Account;
 import framework.domain.Customer;
