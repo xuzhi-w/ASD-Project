@@ -43,8 +43,14 @@ public abstract class Account {
 	}
 
 	public void transferFunds(Account toAccount, double amount, String description){
-		AccountEntry entry = new AccountEntry(-amount, "Transfer", this.accountNumber, toAccount.getCustomer().getName());
-		addEntry(entry);
+		AccountEntry fromEntry = new AccountEntry(-amount, description, toAccount.getAccountNumber(),
+				toAccount.getCustomer().getName());
+		AccountEntry toEntry = new AccountEntry(amount, description, toAccount.getAccountNumber(),
+				toAccount.getCustomer().getName());
+
+		entryList.add(fromEntry);
+
+		toAccount.addEntry(toEntry);
 	}
 
 	private void addEntry(AccountEntry entry) {

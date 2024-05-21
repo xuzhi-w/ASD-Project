@@ -2,11 +2,11 @@ package framework.data;
 
 import framework.domain.Account;
 
-import java.util.Map;
+import java.util.Collection;
 
 public interface AccountDAO {
 	void saveAccount(Account account);
 	void updateAccount(Account account);
 	Account loadAccount(String accountNumber);
-	Map<String, Account> getAccounts();
+	Collection<Account> getAccounts();
 }

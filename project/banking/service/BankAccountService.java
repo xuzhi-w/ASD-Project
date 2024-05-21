@@ -9,6 +9,7 @@ import framework.service.AccountService;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class BankAccountService implements AccountService {
 
@@ -31,27 +32,35 @@ public class BankAccountService implements AccountService {
 
     @Override
     public Account getAccount(String accountNumber) {
-        return null;
+        return bankingAccountDAO.loadAccount(accountNumber);
     }
 
     @Override
     public Collection<Account> getAllAccounts() {
-        return List.of();
+        return bankingAccountDAO.getAccounts();
     }
 
     @Override
     public void deposit(String accountNumber, double amount) {
-
+        Account account = getAccount(accountNumber);
+        account.deposit(amount);
+        bankingAccountDAO.updateAccount(account);
     }
 
     @Override
     public void withdraw(String accountNumber, double amount) {
         Account account = bankingAccountDAO.loadAccount(accountNumber);
         account.deposit(amount);
+        bankingAccountDAO.updateAccount(account);
     }
 
     @Override
     public void transferFunds(String fromAccountNumber, String toAccountNumber, double amount, String description) {
+        Account fromAccount = bankingAccountDAO.loadAccount(fromAccountNumber);
+        Account toAccount = bankingAccountDAO.loadAccount(toAccountNumber);
+        fromAccount.transferFunds(toAccount, amount, description);
+        bankingAccountDAO.updateAccount(fromAccount);
+        bankingAccountDAO.updateAccount(toAccount);
 
     }
 }

@@ -26,7 +26,7 @@ public class BankingAccountDAO implements AccountDAO {
     }
 
     @Override
-    public Map<String, Account> getAccounts() {
-        return accountlist;
+    public Collection<Account> getAccounts() {
+        return accountlist.values();
     }
 }
