@@ -1,4 +1,4 @@
-package framework;
+package framework.domain;
 
 import java.util.Date;
 

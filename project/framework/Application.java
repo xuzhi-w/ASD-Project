@@ -1,5 +1,11 @@
 package framework;
 
+import framework.domain.Account;
+import framework.domain.AccountEntry;
+import framework.domain.Customer;
+import framework.service.AccountService;
+import framework.service.AccountServiceImpl;
+
 public class Application {
 	public static void main(String[] args) {
 		AccountService accountService = new AccountServiceImpl();

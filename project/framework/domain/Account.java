@@ -1,18 +1,19 @@
-package framework;
+package framework.domain;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class Account {
+public abstract class Account {
 	private Customer customer;
 
 	private String accountNumber;
 
 	private List<AccountEntry> entryList = new ArrayList<AccountEntry>();
 
-	public Account(String accountNumber) {
+	public Account(String accountNumber, Customer customer) {
 		this.accountNumber = accountNumber;
+		this.customer = customer;
 	}
 
 	public String getAccountNumber() {
@@ -36,25 +37,15 @@ public class Account {
 		entryList.add(entry);
 	}
 
-	public void withdraw(double amount) {
-		AccountEntry entry = new AccountEntry(-amount, "withdraw", "", "");
-		entryList.add(entry);
-	}
+	public abstract void withdraw(double amount);
 
 	private void addEntry(AccountEntry entry) {
 		entryList.add(entry);
 	}
 
-	public void transferFunds(Account toAccount, double amount, String description) {
-		AccountEntry fromEntry = new AccountEntry(-amount, description, toAccount.getAccountNumber(),
-				toAccount.getCustomer().getName());
-		AccountEntry toEntry = new AccountEntry(amount, description, toAccount.getAccountNumber(),
-				toAccount.getCustomer().getName());
-		
-		entryList.add(fromEntry);
-		
-		toAccount.addEntry(toEntry);
-	}
+	public abstract void transferFunds(Account toAccount, double amount, String description);
+
+	public abstract void generateReport();
 
 	public Customer getCustomer() {
 		return customer;
@@ -67,5 +58,8 @@ public class Account {
 	public Collection<AccountEntry> getEntryList() {
 		return entryList;
 	}
+
+	public abstract void addInterest();
+
 
 }

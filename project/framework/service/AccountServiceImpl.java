@@ -1,4 +1,9 @@
-package framework;
+package framework.service;
+
+import framework.domain.Account;
+import framework.data.AccountDAO;
+import framework.data.AccountDAOImpl;
+import framework.domain.Customer;
 
 import java.util.Collection;
 

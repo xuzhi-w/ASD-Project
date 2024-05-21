@@ -1,4 +1,6 @@
-package framework;
+package framework.service;
+
+import framework.domain.Account;
 
 import java.util.Collection;
 
