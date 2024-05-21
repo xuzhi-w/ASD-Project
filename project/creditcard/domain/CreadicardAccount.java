@@ -10,13 +10,10 @@ public class CreadicardAccount extends Account {
 
     @Override
     public void withdraw(double amount) {
-
+        throw new UnsupportedOperationException();
     }
 
-    @Override
-    public void transferFunds(Account toAccount, double amount, String description) {
 
-    }
 
     @Override
     public void generateReport() {
