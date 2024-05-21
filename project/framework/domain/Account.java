@@ -33,20 +33,23 @@ public abstract class Account {
 	}
 
 	public void deposit(double amount) {
-		AccountEntry entry = new AccountEntry(amount, "deposit", "", "");
-		entryList.add(entry);
+		AccountEntry entry = new AccountEntry(amount, "Deposit", "", "");
+		addEntry(entry);
 	}
 
-	public abstract void withdraw(double amount);
+	public void withdraw(double amount){
+		AccountEntry entry = new AccountEntry(-amount, "Withdraw", "", "");
+		addEntry(entry);
+	}
+
+	public void transferFunds(Account toAccount, double amount, String description){
+		AccountEntry entry = new AccountEntry(-amount, "Transfer", this.accountNumber, toAccount.getCustomer().getName());
+		addEntry(entry);
+	}
 
 	private void addEntry(AccountEntry entry) {
 		entryList.add(entry);
 	}
-
-	public abstract void transferFunds(Account toAccount, double amount, String description);
-
-	public abstract void generateReport();
-
 	public Customer getCustomer() {
 		return customer;
 	}
@@ -58,6 +61,10 @@ public abstract class Account {
 	public Collection<AccountEntry> getEntryList() {
 		return entryList;
 	}
+
+
+
+	public abstract void generateReport();
 
 	public abstract void addInterest();
 

@@ -1,5 +1,6 @@
 package banking.service;
 
+import banking.data.BankingAccountDAO;
 import framework.domain.Account;
 import framework.domain.Customer;
 import framework.service.AccountService;
@@ -9,6 +10,11 @@ import java.util.List;
 
 public class BankAccountService implements AccountService {
 
+    private BankingAccountDAO bankingAccountDAO;
+
+    public BankAccountService() {
+        bankingAccountDAO = new BankingAccountDAO();
+    }
 
     @Override
     public Account createAccount(String accountNumber, Customer customer, String accountType) {
@@ -32,7 +38,8 @@ public class BankAccountService implements AccountService {
 
     @Override
     public void withdraw(String accountNumber, double amount) {
-
+        Account account = bankingAccountDAO.loadAccount(accountNumber);
+        account.deposit(amount);
     }
 
     @Override
