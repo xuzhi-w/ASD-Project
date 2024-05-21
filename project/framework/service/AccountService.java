@@ -1,11 +1,12 @@
 package framework.service;
 
 import framework.domain.Account;
+import framework.domain.Customer;
 
 import java.util.Collection;
 
 public interface AccountService {
-    Account createAccount(String accountNumber, String customerName);
+    Account createAccount(String accountNumber, Customer customer, String accountType);
     Account getAccount(String accountNumber);
     Collection<Account> getAllAccounts();
     void deposit (String accountNumber, double amount);
