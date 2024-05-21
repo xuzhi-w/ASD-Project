@@ -1,5 +1,7 @@
 package banking.service;
 
+import banking.domain.CompanyBankAccount;
+import banking.domain.PersonalBankAccount;
 import framework.domain.Account;
 import framework.domain.Customer;
 import framework.service.AccountService;
@@ -10,8 +12,14 @@ import java.util.List;
 public class BankAccountService implements AccountService {
 
     @Override
-    public Account createAccount(String accountNumber, Customer customer, String accountType) {
-        return null;
+    public Account createAccount(String accountNumber, Customer customer, String accountType, int numberOfEmployees) {
+        Account account;
+        if(accountType.equals("company")) {
+            account = new CompanyBankAccount(accountNumber, customer, numberOfEmployees);
+        }else {
+            account = new PersonalBankAccount(accountNumber, customer);
+        }
+        return account;
     }
 
     @Override
