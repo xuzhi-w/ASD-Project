@@ -6,7 +6,7 @@ import framework.domain.Customer;
 import java.util.Collection;
 
 public interface AccountService {
-    Account createAccount(String accountNumber, Customer customer, String accountType);
+    Account createAccount(String accountNumber, Customer customer, String accountType, int numberOfEmployees);
     Account getAccount(String accountNumber);
     Collection<Account> getAllAccounts();
     void deposit (String accountNumber, double amount);
