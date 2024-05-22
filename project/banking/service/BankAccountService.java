@@ -15,14 +15,11 @@ import java.util.Collection;
 
 public class BankAccountService extends AccountServiceImpl {
 
-    private AccountFactory accountFactory;
     public BankAccountService(AccountDAO accountDAO) {
-        super(accountDAO);
-        accountFactory = new BankFactory();
+        super(accountDAO, new BankFactory());
     }
 
     public Account createAccount(String accountNumber, double balance , Customer customer, String accountType, int numberOfEmployees) {
-        return accountFactory.createAccount(accountNumber,balance,customer,accountType,numberOfEmployees);
+        return getAccountFactory().createAccount(accountNumber,balance,customer,accountType,numberOfEmployees);
     }
-
 }

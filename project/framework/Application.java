@@ -1,12 +1,10 @@
 package framework;
 
-import creditcard.domain.CreadicardAccount;
+import creditcard.domain.CreditCardAccount;
 import creditcard.domain.GoldAccount;
 import framework.domain.Account;
-import framework.domain.AccountEntry;
 import framework.domain.Address;
 import framework.domain.Customer;
-import framework.service.AccountService;
 
 import java.time.LocalDate;
 
@@ -17,7 +15,7 @@ public class Application {
 		Customer c1 = new Customer("Mamadu",a1, "mamadu@gmail.com", LocalDate.of(2000, 2, 7));
 
 
-		Account creditcard = new CreadicardAccount("123456",1000, c1);
+		Account creditcard = new CreditCardAccount("123456",1000, c1);
 		creditcard.setAccountType(new GoldAccount());
 
 
