@@ -1,6 +1,8 @@
 package ui.bank;
 
 
+import framework.service.AccountService;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -10,6 +12,9 @@ import java.awt.*;
  */
 public class BankFrm extends javax.swing.JFrame
 {
+	//Banking Application Instance
+
+	private AccountService service;
     /****
      * init variables in the object
      ****/
