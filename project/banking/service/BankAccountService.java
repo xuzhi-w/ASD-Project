@@ -1,41 +1,25 @@
 package banking.service;
 
+import banking.domain.BankFactory;
+import banking.domain.CompanyBankAccount;
+import banking.domain.PersonalBankAccount;
+import banking.data.BankingAccountDAO;
+import framework.data.AccountDAO;
 import framework.domain.Account;
+import framework.domain.AccountFactory;
 import framework.domain.Customer;
 import framework.service.AccountService;
+import framework.service.AccountServiceImpl;
 
 import java.util.Collection;
-import java.util.List;
 
-public class BankAccountService implements AccountService {
+public class BankAccountService extends AccountServiceImpl {
 
-    @Override
-    public Account createAccount(String accountNumber, Customer customer, String accountType) {
-        return null;
+    public BankAccountService(AccountDAO accountDAO) {
+        super(accountDAO, new BankFactory());
     }
 
-    @Override
-    public Account getAccount(String accountNumber) {
-        return null;
-    }
-
-    @Override
-    public Collection<Account> getAllAccounts() {
-        return List.of();
-    }
-
-    @Override
-    public void deposit(String accountNumber, double amount) {
-
-    }
-
-    @Override
-    public void withdraw(String accountNumber, double amount) {
-
-    }
-
-    @Override
-    public void transferFunds(String fromAccountNumber, String toAccountNumber, double amount, String description) {
-
+    public Account createAccount(String accountNumber, double balance , Customer customer, String accountType, int numberOfEmployees) {
+        return getAccountFactory().createAccount(accountNumber,balance,customer,accountType,numberOfEmployees);
     }
 }
