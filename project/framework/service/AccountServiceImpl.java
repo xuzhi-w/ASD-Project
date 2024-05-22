@@ -15,7 +15,7 @@ public abstract class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public abstract Account createAccount(String accountNumber, Customer customer, String accountType, int numberOfEmployees);
+    public abstract Account createAccount(String accountNumber, double balance, Customer customer, String accountType, int numberOfEmployees);
 
 
     @Override
@@ -49,6 +49,12 @@ public abstract class AccountServiceImpl implements AccountService {
         fromAccount.transferFunds(toAccount, amount, description);
         accountDAO.updateAccount(fromAccount);
         accountDAO.updateAccount(toAccount);
-
     }
+    @Override
+    public void addInterest(){
+        for(Account account : accountDAO.getAccounts()){
+            account.addInterest();
+        }
+    }
+
 }

@@ -8,17 +8,20 @@ public class AccountEntry {
 	private String description;
 	private String fromAccountNumber;
 	private String fromPersonName;
+	private TransactionType transactionType;
+
 	
 	public AccountEntry() {
 	}
 
-	public AccountEntry(double amount, String description, String fromAccountNumber, String fromPersonName) {
+	public AccountEntry(double amount, String description, String fromAccountNumber, String fromPersonName, TransactionType transactionType) {
 		super();
 		this.date = new Date();
 		this.amount = amount;
 		this.description = description;
 		this.fromAccountNumber = fromAccountNumber;
 		this.fromPersonName = fromPersonName;
+		this.transactionType = transactionType;
 	}
 
 	public double getAmount() {
@@ -60,5 +63,12 @@ public class AccountEntry {
 	public void setFromPersonName(String fromPersonName) {
 		this.fromPersonName = fromPersonName;
 	}
-	
+
+	public TransactionType getTransactionType() {
+		return transactionType;
+	}
+
+	public void setTransactionType(TransactionType transactionType) {
+		this.transactionType = transactionType;
+	}
 }

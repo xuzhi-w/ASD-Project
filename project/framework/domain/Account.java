@@ -7,20 +7,24 @@ import java.util.Collection;
 import java.util.List;
 
 public abstract class Account implements Subject{
+
 	private Customer customer;
 
 	private String accountNumber;
+	private double balance;
 
 	private AccountType accountType;
 
-	private List<AccountEntry> entryList = new ArrayList<AccountEntry>();
+	private List<AccountEntry> entryList;
 
 	List<Observer> observers;
 
-	public Account(String accountNumber, Customer customer) {
+	public Account(String accountNumber, double balance, Customer customer) {
 		this.accountNumber = accountNumber;
 		this.customer = customer;
+		this.balance = balance;
 		this.observers = new ArrayList<>();
+		this.entryList = new ArrayList<>();
 	}
 
 	public String getAccountNumber() {
@@ -51,9 +55,9 @@ public abstract class Account implements Subject{
 
 	public void transferFunds(Account toAccount, double amount, String description){
 		AccountEntry fromEntry = new AccountEntry(-amount, description, toAccount.getAccountNumber(),
-				toAccount.getCustomer().getName());
+				toAccount.getCustomer().getName(), TransactionType.TRANSFER);
 		AccountEntry toEntry = new AccountEntry(amount, description, toAccount.getAccountNumber(),
-				toAccount.getCustomer().getName());
+				toAccount.getCustomer().getName(), TransactionType.DEPOSIT);
 
 		entryList.add(fromEntry);
 
@@ -75,11 +79,28 @@ public abstract class Account implements Subject{
 		return entryList;
 	}
 
+	public AccountType getAccountType() {
+		return accountType;
+	}
 
+	public void setAccountType(AccountType accountType) {
+		this.accountType = accountType;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+	public  double getAccountBalance(){
+		return this.balance;
+	}
 
 	public abstract void generateReport();
 
-	public abstract void addInterest();
+	public void addInterest() {
+		double calculatedInterest  = getAccountType().addInterest(getBalance());
+		deposit(calculatedInterest);
+	}
+
 	public abstract void deposit(double amount);
 	public abstract void withdraw(double amount);
 

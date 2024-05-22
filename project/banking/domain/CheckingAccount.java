@@ -9,4 +9,14 @@ public class CheckingAccount implements BankingAccountType{
             return balance * 0.025;
         }
     }
+
+    @Override
+    public double getMonthlyInterest() {
+        return 0;
+    }
+
+    @Override
+    public double getMinimumPayment() {
+        return 0;
+    }
 }

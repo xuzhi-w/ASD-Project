@@ -1,14 +1,16 @@
 package banking.domain;
 
-import banking.data.BankingAccountDAO;
 import framework.domain.Account;
+import framework.domain.AccountEntry;
 import framework.domain.Customer;
+import framework.domain.TransactionType;
+
 
 public abstract class BankAccount extends Account {
 
 
-	public BankAccount(String accountNumber, Customer customer) {
-        super(accountNumber, customer);
+	public BankAccount(String accountNumber, double balance, Customer customer) {
+        super(accountNumber, 0, customer);
 	}
 
 	@Override
@@ -21,10 +23,6 @@ public abstract class BankAccount extends Account {
 
 	}
 
-	@Override
-	public void addInterest() {
-
-	}
 
 
 }
