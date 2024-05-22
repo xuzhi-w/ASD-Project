@@ -1,40 +1,24 @@
 package creditcard.service;
 
+import creditcard.domain.CreditCardFactory;
+import framework.data.AccountDAO;
 import framework.domain.Account;
+import framework.domain.AccountFactory;
 import framework.domain.Customer;
-import framework.service.AccountService;
+import framework.service.AccountServiceImpl;
 
-import java.util.Collection;
-import java.util.List;
+public class CreditCardService extends AccountServiceImpl {
 
-public class CreditCardService implements AccountService {
-    @Override
-    public Account createAccount(String accountNumber, Customer customer, String accountType) {
-        return null;
+
+    public CreditCardService(AccountDAO accountDAO) {
+       super(accountDAO, new CreditCardFactory());
     }
 
-    @Override
-    public Account getAccount(String accountNumber) {
-        return null;
-    }
+
 
     @Override
-    public Collection<Account> getAllAccounts() {
-        return List.of();
+    public Account createAccount(String accountNumber, double balance,  Customer customer, String accountType, int numberOfEmployees) {
+        return getAccountFactory().createAccount(accountNumber,balance,customer,accountType,numberOfEmployees);
     }
 
-    @Override
-    public void deposit(String accountNumber, double amount) {
-
-    }
-
-    @Override
-    public void withdraw(String accountNumber, double amount) {
-
-    }
-
-    @Override
-    public void transferFunds(String fromAccountNumber, String toAccountNumber, double amount, String description) {
-
-    }
 }

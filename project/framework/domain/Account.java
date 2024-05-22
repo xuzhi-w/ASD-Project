@@ -1,20 +1,31 @@
 package framework.domain;
 
+import framework.integration.Observer;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class Account {
+public abstract class Account implements Subject{
+
 	private Customer customer;
 
 	private String customerID;
 	private String accountNumber;
+	private double balance;
 
-	private List<AccountEntry> entryList = new ArrayList<AccountEntry>();
+	private AccountType accountType;
 
-	public Account(String accountNumber, Customer customer) {
+	private List<AccountEntry> entryList;
+
+	List<Observer> observers;
+
+	public Account(String accountNumber, double balance, Customer customer) {
 		this.accountNumber = accountNumber;
 		this.customer = customer;
+		this.balance = balance;
+		this.observers = new ArrayList<>();
+		this.entryList = new ArrayList<>();
 	}
 
 	public String getCustomerID() {
@@ -37,21 +48,30 @@ public abstract class Account {
 		return balance;
 	}
 
-	public void deposit(double amount) {
-		AccountEntry entry = new AccountEntry(amount, "deposit", "", "");
-		entryList.add(entry);
+//	public void deposit(double amount) {
+//		AccountEntry entry = new AccountEntry(amount, "Deposit", "", "");
+//		addEntry(entry);
+//	}
+//
+//	public void withdraw(double amount){
+//		AccountEntry entry = new AccountEntry(-amount, "Withdraw", "", "");
+//		addEntry(entry);
+//	}
+
+	public void transferFunds(Account toAccount, double amount, String description){
+		AccountEntry fromEntry = new AccountEntry(-amount, description, toAccount.getAccountNumber(),
+				toAccount.getCustomer().getName(), TransactionType.TRANSFER);
+		AccountEntry toEntry = new AccountEntry(amount, description, toAccount.getAccountNumber(),
+				toAccount.getCustomer().getName(), TransactionType.DEPOSIT);
+
+		entryList.add(fromEntry);
+
+		toAccount.addEntry(toEntry);
 	}
 
-	public abstract void withdraw(double amount);
-
-	private void addEntry(AccountEntry entry) {
+	public void addEntry(AccountEntry entry) {
 		entryList.add(entry);
 	}
-
-	public abstract void transferFunds(Account toAccount, double amount, String description);
-
-	public abstract void generateReport();
-
 	public Customer getCustomer() {
 		return customer;
 	}
@@ -64,7 +84,50 @@ public abstract class Account {
 		return entryList;
 	}
 
-	public abstract void addInterest();
+	public AccountType getAccountType() {
+		return accountType;
+	}
+
+	public void setAccountType(AccountType accountType) {
+		this.accountType = accountType;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+	public  double getAccountBalance(){
+		return this.balance;
+	}
+
+	public abstract void generateReport();
+
+	public void addInterest() {
+		double calculatedInterest  = getAccountType().addInterest(getBalance());
+		deposit(calculatedInterest);
+	}
+
+	public abstract void deposit(double amount);
+	public abstract void withdraw(double amount);
+
+
+
+	// Subject for observer
+	@Override
+	public void registerObserver(Observer o) {
+		observers.add(o);
+	}
+
+	@Override
+	public void removeObserver(Observer o) {
+		observers.remove(o);
+	}
+
+	@Override
+	public void notifyObservers(String message, Customer customer) {
+		for (Observer o : observers) {
+			o.update(message, customer);
+		}
+	}
 
 
 }

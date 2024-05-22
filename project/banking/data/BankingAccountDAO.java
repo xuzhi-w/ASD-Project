@@ -5,35 +5,28 @@ import framework.domain.Account;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BankingAccountDAO implements AccountDAO {
-    Collection<Account> accountlist = new ArrayList<>();
+    Map<String, Account> accountlist = new HashMap<>();
     @Override
     public void saveAccount(Account account) {
-        accountlist.add(account);
+        accountlist.put(account.getAccountNumber(), account);
     }
 
     @Override
     public void updateAccount(Account account) {
-        Account accountexist = loadAccount(account.getAccountNumber());
-        if (accountexist != null) {
-            accountlist.remove(accountexist); // remove the old
-            accountlist.add(account); // add the new
-        }
+     saveAccount(account);
     }
 
     @Override
-    public Account loadAccount(String accountnumber) {
-        for (Account account : accountlist) {
-            if (account.getAccountNumber().equals(accountnumber)) {
-                return account;
-            }
-        }
-        return null;
+    public Account loadAccount(String accountNumber) {
+        return accountlist.get(accountNumber);
     }
 
     @Override
     public Collection<Account> getAccounts() {
-        return accountlist;
+        return accountlist.values();
     }
 }

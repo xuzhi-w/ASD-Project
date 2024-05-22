@@ -1,18 +1,16 @@
 package banking.domain;
 
 import framework.domain.Account;
+import framework.domain.AccountEntry;
 import framework.domain.Customer;
+import framework.domain.TransactionType;
 
-public class BankAccount extends Account {
+
+public abstract class BankAccount extends Account {
 
 
-	public BankAccount(String accountNumber, Customer customer) {
-        super(accountNumber, customer);
-	}
-
-	@Override
-	public void withdraw(double amount) {
-
+	public BankAccount(String accountNumber, double balance, Customer customer) {
+        super(accountNumber, 0, customer);
 	}
 
 	@Override
@@ -25,10 +23,6 @@ public class BankAccount extends Account {
 
 	}
 
-	@Override
-	public void addInterest() {
-
-	}
 
 
 }
