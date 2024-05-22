@@ -15,17 +15,18 @@ public class CreadicardAccount extends Account {
 
     @Override
     public void withdraw(double amount) {
+<<<<<<< HEAD
         AccountEntry entry = new AccountEntry(-amount, "Account charged", "", "");
         addEntry(entry);
         if (amount > 400) {
             notifyObservers("Account charged " + amount, getCustomer());
         }
+=======
+        throw new UnsupportedOperationException();
+>>>>>>> 5f3f6611892c87a7aa07bf094b0446e84e007a88
     }
 
-    @Override
-    public void transferFunds(Account toAccount, double amount, String description) {
 
-    }
 
     @Override
     public void generateReport() {

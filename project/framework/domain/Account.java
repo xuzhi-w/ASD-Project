@@ -11,6 +11,8 @@ public abstract class Account implements Subject{
 
 	private String accountNumber;
 
+	private AccountType accountType;
+
 	private List<AccountEntry> entryList = new ArrayList<AccountEntry>();
 
 	List<Observer> observers;
