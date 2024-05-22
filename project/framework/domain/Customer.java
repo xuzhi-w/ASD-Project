@@ -1,12 +1,23 @@
 package framework.domain;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Customer {
+
+	private String customerID;
 	private String name;
 	private Address address;
 	private String email;
 	private LocalDate dateOfBirth;
+
+	private List<Account> accounts;
+
+
+	public String getCustomerID() {
+		return customerID;
+	}
 
 
 	public Customer(String name, Address address, String email, LocalDate dateOfBirth) {
@@ -14,6 +25,7 @@ public class Customer {
 		this.address = address;
 		this.email = email;
 		this.dateOfBirth = dateOfBirth;
+		accounts = new ArrayList<>();
 	}
 
 	public String getName() {

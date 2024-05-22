@@ -7,6 +7,7 @@ import java.util.List;
 public abstract class Account {
 	private Customer customer;
 
+	private String customerID;
 	private String accountNumber;
 
 	private List<AccountEntry> entryList = new ArrayList<AccountEntry>();
@@ -14,6 +15,10 @@ public abstract class Account {
 	public Account(String accountNumber, Customer customer) {
 		this.accountNumber = accountNumber;
 		this.customer = customer;
+	}
+
+	public String getCustomerID() {
+		return customerID;
 	}
 
 	public String getAccountNumber() {

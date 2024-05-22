@@ -15,12 +15,12 @@ public class TransactionRecordsWindow extends JFrame {
 
     private CreditAccountDAO creditAccountDAO = new CreditAccountDAO();
 
-    public TransactionRecordsWindow(String accountName) {
-        setTitle("Transaction Records for Account: " + accountName);
+    public TransactionRecordsWindow(String accountNumber) {
+        setTitle("Transaction Records for Account: " + accountNumber);
         setSize(800, 600);
 
         // Assuming you have a method to retrieve transaction records based on the account name
-        DefaultTableModel transactionModel = getTransactionRecords(accountName);
+        DefaultTableModel transactionModel = getTransactionRecords(accountNumber);
         JTable transactionTable = new JTable(transactionModel);
         JScrollPane scrollPane = new JScrollPane(transactionTable);
 
