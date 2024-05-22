@@ -2,6 +2,7 @@ package framework.service;
 
 import framework.data.AccountDAO;
 import framework.domain.Account;
+import framework.domain.AccountFactory;
 import framework.domain.Customer;
 
 import java.util.Collection;
@@ -9,9 +10,11 @@ import java.util.Collection;
 public abstract class AccountServiceImpl implements AccountService {
 
     private AccountDAO accountDAO;
+    private AccountFactory accountFactory;
 
-    public AccountServiceImpl(AccountDAO accountDAO) {
+    public AccountServiceImpl(AccountDAO accountDAO, AccountFactory accountFactory) {
         this.accountDAO = accountDAO;
+        this.accountFactory = accountFactory;
     }
 
     @Override
@@ -57,4 +60,7 @@ public abstract class AccountServiceImpl implements AccountService {
         }
     }
 
+    public AccountFactory getAccountFactory() {
+        return accountFactory;
+    }
 }

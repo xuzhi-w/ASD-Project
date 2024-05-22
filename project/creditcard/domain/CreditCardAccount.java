@@ -4,22 +4,18 @@ import framework.domain.Account;
 import framework.domain.AccountEntry;
 import framework.domain.Customer;
 import framework.domain.TransactionType;
-import framework.integration.Observer;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class CreadicardAccount extends Account {
+public class CreditCardAccount extends Account {
 
 
 
-    public CreadicardAccount(String accountNumber, double balance, Customer customer) {
+    public CreditCardAccount(String accountNumber, double balance, Customer customer) {
         super(accountNumber, balance, customer);
     }
 
     @Override
     public void withdraw(double amount) {
-        AccountEntry entry = new AccountEntry(-amount, "Account charged", "", "", TransactionType.WITHDRAW);
+        AccountEntry entry = new AccountEntry(amount, "Account charged", "", "", TransactionType.WITHDRAW);
         addEntry(entry);
         if (amount > 400) {
             notifyObservers("Account charged " + amount, getCustomer());
@@ -66,9 +62,10 @@ public class CreadicardAccount extends Account {
         return getAccountType().getMinimumPayment() * getAccountBalance();
     }
     private void updateBalance() {
-        double balance =  getAccountBalance() - getTotalCredit() + getTotalCharges() +
+        double total =  getAccountBalance() - getTotalCredit() + getTotalCharges() +
                 getAccountType().getMonthlyInterest()*(getAccountBalance() - getTotalCredit());
-        setBalance(balance);
+        System.out.println(total);
+        setBalance(total);
     }
 
 
