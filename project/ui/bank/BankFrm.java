@@ -244,8 +244,8 @@ public class BankFrm extends javax.swing.JFrame
 		pac.setBounds(450, 20, 300, 330);
 		pac.show();
 		bankingApplication.getAccountService().createAccount("Personal", accountnr, 0, clientName, street, city, state, zip, email, LocalDate.of(2020, 4, 7), accountType, 0);
-		Account account = bankingApplication.getAccountService().getAccount(accountnr);
-		System.out.println(account);
+		//Account account = bankingApplication.getAccountService().getAccount(accountnr);
+		//System.out.println(account);
 
 		if (newaccount){
             // add row to table
