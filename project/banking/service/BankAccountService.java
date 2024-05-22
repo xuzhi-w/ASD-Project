@@ -3,20 +3,19 @@ package banking.service;
 import banking.domain.CompanyBankAccount;
 import banking.domain.PersonalBankAccount;
 import banking.data.BankingAccountDAO;
+import framework.data.AccountDAO;
 import framework.domain.Account;
 import framework.domain.Customer;
 import framework.service.AccountService;
+import framework.service.AccountServiceImpl;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
-public class BankAccountService implements AccountService {
+public class BankAccountService extends AccountServiceImpl {
 
-    private BankingAccountDAO bankingAccountDAO;
 
-    public BankAccountService() {
-        bankingAccountDAO = new BankingAccountDAO();
+    public BankAccountService(AccountDAO accountDAO) {
+        super(accountDAO);
     }
 
     @Override
@@ -30,37 +29,4 @@ public class BankAccountService implements AccountService {
         return account;
     }
 
-    @Override
-    public Account getAccount(String accountNumber) {
-        return bankingAccountDAO.loadAccount(accountNumber);
-    }
-
-    @Override
-    public Collection<Account> getAllAccounts() {
-        return bankingAccountDAO.getAccounts();
-    }
-
-    @Override
-    public void deposit(String accountNumber, double amount) {
-        Account account = getAccount(accountNumber);
-        account.deposit(amount);
-        bankingAccountDAO.updateAccount(account);
-    }
-
-    @Override
-    public void withdraw(String accountNumber, double amount) {
-        Account account = bankingAccountDAO.loadAccount(accountNumber);
-        account.deposit(amount);
-        bankingAccountDAO.updateAccount(account);
-    }
-
-    @Override
-    public void transferFunds(String fromAccountNumber, String toAccountNumber, double amount, String description) {
-        Account fromAccount = bankingAccountDAO.loadAccount(fromAccountNumber);
-        Account toAccount = bankingAccountDAO.loadAccount(toAccountNumber);
-        fromAccount.transferFunds(toAccount, amount, description);
-        bankingAccountDAO.updateAccount(fromAccount);
-        bankingAccountDAO.updateAccount(toAccount);
-
-    }
 }

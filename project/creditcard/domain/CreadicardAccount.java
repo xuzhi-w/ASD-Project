@@ -1,7 +1,12 @@
 package creditcard.domain;
 
 import framework.domain.Account;
+import framework.domain.AccountEntry;
 import framework.domain.Customer;
+import framework.integration.Observer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreadicardAccount extends Account {
     public CreadicardAccount(String accountNumber, Customer customer) {
@@ -10,7 +15,11 @@ public class CreadicardAccount extends Account {
 
     @Override
     public void withdraw(double amount) {
-
+        AccountEntry entry = new AccountEntry(-amount, "Account charged", "", "");
+        addEntry(entry);
+        if (amount > 400) {
+            notifyObservers("Account charged " + amount, getCustomer());
+        }
     }
 
     @Override
@@ -27,4 +36,5 @@ public class CreadicardAccount extends Account {
     public void addInterest() {
 
     }
+
 }

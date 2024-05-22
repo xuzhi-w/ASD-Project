@@ -1,19 +1,15 @@
 package creditcard.service;
 
-import creditcard.data.CreditAccountDAO;
 import creditcard.domain.CreadicardAccount;
+import framework.data.AccountDAO;
 import framework.domain.Account;
 import framework.domain.Customer;
-import framework.service.AccountService;
+import framework.service.AccountServiceImpl;
 
-import java.util.Collection;
-import java.util.List;
+public class CreditCardService extends AccountServiceImpl {
 
-public class CreditCardService implements AccountService {
-    private CreditAccountDAO creditAccountDAO;
-
-    public CreditCardService() {
-        creditAccountDAO = new CreditAccountDAO();
+    public CreditCardService(AccountDAO accountDAO) {
+       super(accountDAO);
     }
 
     @Override
@@ -21,36 +17,4 @@ public class CreditCardService implements AccountService {
         return new CreadicardAccount(accountNumber, customer);
     }
 
-    @Override
-    public Account getAccount(String accountNumber) {
-        return creditAccountDAO.loadAccount(accountNumber);
-    }
-
-    @Override
-    public Collection<Account> getAllAccounts() {
-        return creditAccountDAO.getAccounts();
-    }
-
-    @Override
-    public void deposit(String accountNumber, double amount) {
-        Account account = getAccount(accountNumber);
-        account.deposit(amount);
-        creditAccountDAO.updateAccount(account);
-    }
-
-    @Override
-    public void withdraw(String accountNumber, double amount) {
-        Account account = getAccount(accountNumber);
-        account.withdraw(amount);
-        creditAccountDAO.updateAccount(account);
-    }
-
-    @Override
-    public void transferFunds(String fromAccountNumber, String toAccountNumber, double amount, String description) {
-        Account fromAccount = getAccount(fromAccountNumber);
-        Account toAccount = getAccount(toAccountNumber);
-        fromAccount.transferFunds(toAccount, amount, description);
-        creditAccountDAO.updateAccount(fromAccount);
-        creditAccountDAO.updateAccount(toAccount);
-    }
 }
