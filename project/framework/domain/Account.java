@@ -9,6 +9,8 @@ public abstract class Account {
 
 	private String accountNumber;
 
+	private AccountType accountType;
+
 	private List<AccountEntry> entryList = new ArrayList<AccountEntry>();
 
 	public Account(String accountNumber, Customer customer) {
