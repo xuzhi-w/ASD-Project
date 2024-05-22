@@ -10,6 +10,7 @@ public abstract class Account implements Subject{
 
 	private Customer customer;
 
+	private String customerID;
 	private String accountNumber;
 	private double balance;
 
@@ -25,6 +26,10 @@ public abstract class Account implements Subject{
 		this.balance = balance;
 		this.observers = new ArrayList<>();
 		this.entryList = new ArrayList<>();
+	}
+
+	public String getCustomerID() {
+		return customerID;
 	}
 
 	public String getAccountNumber() {

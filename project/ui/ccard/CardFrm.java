@@ -23,6 +23,8 @@ public class CardFrm extends javax.swing.JFrame
     private JScrollPane JScrollPane1;
     CardFrm thisframe;
     private Object rowdata[];
+
+	private String accountNumber;
     
 	public CardFrm()
 	{
@@ -170,13 +172,30 @@ public class CardFrm extends javax.swing.JFrame
 				JButtonExit_actionPerformed(event);
 			else if (object == JButton_NewCCAccount)
 				JButtonNewCCAC_actionPerformed(event);
-			else if (object == JButton_GenBill)
-				JButtonGenerateBill_actionPerformed(event);
-			else if (object == JButton_Deposit)
+			else if (object == JButton_GenBill){
+				if(checkSelected()){
+					JButtonGenerateBill_actionPerformed(event);
+				};
+			}else if (object == JButton_Deposit)
 				JButtonDeposit_actionPerformed(event);
 			else if (object == JButton_Withdraw)
 				JButtonWithdraw_actionPerformed(event);
 			
+		}
+
+		public boolean checkSelected(){
+			// Check if a row is selected
+			int selectedRow = JTable1.getSelectedRow();
+			if (selectedRow != -1) {
+				// A row is selected
+//				JOptionPane.showMessageDialog(getContentPane(), "Row " + selectedRow + " is selected.");
+				accountNumber = (String) model.getValueAt(selectedRow, 1);
+				return true;
+			} else if(selectedRow == -1) {
+				// No row is selected
+				JOptionPane.showMessageDialog(getContentPane(), "No row is selected.");
+			}
+			return false;
 		}
 	}
     
@@ -217,9 +236,12 @@ public class CardFrm extends javax.swing.JFrame
 
 	void JButtonGenerateBill_actionPerformed(java.awt.event.ActionEvent event)
 	{
-		JDialogGenBill billFrm = new JDialogGenBill();
-		billFrm.setBounds(450, 20, 400, 350);
-		billFrm.show();
+//		JDialogGenBill billFrm = new JDialogGenBill();
+//		billFrm.setBounds(450, 20, 400, 350);
+//		billFrm.show();
+
+		TransactionRecordsWindow recordsWindow = new TransactionRecordsWindow(accountNumber);
+		// Open the transaction records window for the selected account
 	    
 	}
 
