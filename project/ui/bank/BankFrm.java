@@ -60,6 +60,11 @@ public class BankFrm extends javax.swing.JFrame
 		JButton_PerAC.setText("Add personal account");
 		JPanel1.add(JButton_PerAC);
 		JButton_PerAC.setBounds(24,20,192,33);
+		//add generate report button
+		JButton_GenerateReport.setText("Generate report of accounts");
+		JPanel1.add(JButton_GenerateReport);
+		JButton_GenerateReport.setBounds(24,55,192,33);
+
 		JButton_CompAC.setText("Add company account");
 		JButton_CompAC.setActionCommand("jbutton");
 		JPanel1.add(JButton_CompAC);
@@ -125,11 +130,14 @@ public class BankFrm extends javax.swing.JFrame
 
 	javax.swing.JPanel JPanel1 = new javax.swing.JPanel();
 	javax.swing.JButton JButton_PerAC = new javax.swing.JButton();
+	javax.swing.JButton JButton_GenerateReport = new javax.swing.JButton();
 	javax.swing.JButton JButton_CompAC = new javax.swing.JButton();
 	javax.swing.JButton JButton_Deposit = new javax.swing.JButton();
 	javax.swing.JButton JButton_Withdraw = new javax.swing.JButton();
 	javax.swing.JButton JButton_Addinterest= new javax.swing.JButton();
 	javax.swing.JButton JButton_Exit = new javax.swing.JButton();
+
+	private String  accountNumber;
 
 	void exitApplication()
 	{
@@ -182,9 +190,27 @@ public class BankFrm extends javax.swing.JFrame
 				JButtonWithdraw_actionPerformed(event);
 			else if (object == JButton_Addinterest)
 				JButtonAddinterest_actionPerformed(event);
-			
+			else if (object == JButton_GenerateReport){
+				checkSelected();
+				JButton_GenerateReport_actionPerformed(event);
+			}
+		}
+		public boolean checkSelected(){
+			// Check if a row is selected
+			int selectedRow = JTable1.getSelectedRow();
+			if (selectedRow != -1) {
+				// A row is selected
+//				JOptionPane.showMessageDialog(getContentPane(), "Row " + selectedRow + " is selected.");
+				 accountNumber = (String) model.getValueAt(selectedRow, 0);
+				return true;
+			} else if(selectedRow == -1) {
+				// No row is selected
+				JOptionPane.showMessageDialog(getContentPane(), "No row is selected.");
+			}
+			return false;
 		}
 	}
+
     
     //When the Exit button is pressed this code gets executed
     //this will exit from the system
@@ -221,6 +247,35 @@ public class BankFrm extends javax.swing.JFrame
        
         
     }
+
+	void JButton_GenerateReport_actionPerformed(java.awt.event.ActionEvent event)
+	{
+		/*
+		 JDialog_AddPAcc type object is for adding personal information
+		 construct a JDialog_AddPAcc type object
+		 set the boundaries and show it
+		*/
+
+		JDialog_AddPAcc pac = new JDialog_AddPAcc(myframe);
+		pac.setBounds(450, 20, 300, 330);
+		pac.show();
+
+		if (newaccount){
+			// add row to table
+			rowdata[0] = accountnr;
+			rowdata[1] = clientName;
+			rowdata[2] = city;
+			rowdata[3] = "P";
+			rowdata[4] = accountType;
+			rowdata[5] = "0";
+			model.addRow(rowdata);
+			JTable1.getSelectionModel().setAnchorSelectionIndex(-1);
+			newaccount=false;
+		}
+
+
+
+	}
 
 	void JButtonCompAC_actionPerformed(java.awt.event.ActionEvent event)
 	{

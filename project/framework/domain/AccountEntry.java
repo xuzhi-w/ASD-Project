@@ -24,6 +24,14 @@ public class AccountEntry {
 		this.transactionType = transactionType;
 	}
 
+	public AccountEntry(Date date, double amount, String description, String fromAccountNumber, String fromPersonName) {
+		super();
+		this.date = date;
+		this.amount = amount;
+		this.description = description;
+		this.fromAccountNumber = fromAccountNumber;
+		this.fromPersonName = fromPersonName;
+	}
 	public double getAmount() {
 		return amount;
 	}
