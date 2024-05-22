@@ -3,8 +3,10 @@ package framework.service;
 import framework.data.AccountDAO;
 import framework.domain.Account;
 import framework.domain.AccountFactory;
+import framework.domain.AccountTypeEnum;
 import framework.domain.Customer;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
 public abstract class AccountServiceImpl implements AccountService {
@@ -18,7 +20,8 @@ public abstract class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public abstract Account createAccount(String accountNumber, double balance, Customer customer, String accountType, int numberOfEmployees);
+    public abstract Account createAccount(String bankAccountType, String accountNumber, double balance,
+                                          String name, String street, String city, String state, String zip, String email, LocalDate dateOfBirth, AccountTypeEnum accountType, int numberOfEmployees);
 
 
     @Override
@@ -40,8 +43,9 @@ public abstract class AccountServiceImpl implements AccountService {
 
     @Override
     public void withdraw(String accountNumber, double amount) {
+
         Account account = accountDAO.loadAccount(accountNumber);
-        account.deposit(amount);
+        account.withdraw(amount);
         accountDAO.updateAccount(account);
     }
 
@@ -62,5 +66,9 @@ public abstract class AccountServiceImpl implements AccountService {
 
     public AccountFactory getAccountFactory() {
         return accountFactory;
+    }
+
+    public AccountDAO getAccountDAO() {
+        return accountDAO;
     }
 }
