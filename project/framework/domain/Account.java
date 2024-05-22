@@ -124,5 +124,15 @@ public abstract class Account implements Subject{
 		}
 	}
 
-
+	@Override
+	public String toString() {
+		return "Account{" +
+				"customer=" + customer +
+				", accountNumber='" + accountNumber + '\'' +
+				", balance=" + balance +
+				", accountType=" + accountType +
+				", entryList=" + entryList +
+				", observers=" + observers +
+				'}';
+	}
 }

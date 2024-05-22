@@ -1,9 +1,17 @@
 package ui.bank;
 
 
+import framework.domain.Account;
+import framework.domain.AccountTypeEnum;
+import framework.domain.Address;
+import framework.domain.Customer;
+import ui.BankingApplication;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * A basic JFC based application.
@@ -13,7 +21,10 @@ public class BankFrm extends javax.swing.JFrame
     /****
      * init variables in the object
      ****/
-    String accountnr, clientName,street,city,zip,state,accountType,clientType,amountDeposit;
+	BankingApplication bankingApplication;
+
+    String accountnr, clientName,street,city,zip,state,clientType,amountDeposit, email, birthDate;
+	AccountTypeEnum accountType;
     boolean newaccount;
     private DefaultTableModel model;
     private JTable JTable1;
@@ -91,6 +102,8 @@ public class BankFrm extends javax.swing.JFrame
 		JButton_Deposit.addActionListener(lSymAction);
 		JButton_Withdraw.addActionListener(lSymAction);
 		JButton_Addinterest.addActionListener(lSymAction);
+
+		bankingApplication = new BankingApplication();
 		
 	}
 
@@ -204,6 +217,9 @@ public class BankFrm extends javax.swing.JFrame
 		JDialog_AddPAcc pac = new JDialog_AddPAcc(myframe);
 		pac.setBounds(450, 20, 300, 330);
 		pac.show();
+		bankingApplication.getAccountService().createAccount("Personal", accountnr, 0, clientName, street, city, state, zip, email, LocalDate.of(2020, 4, 7), accountType, 0);
+		Account account = bankingApplication.getAccountService().getAccount(accountnr);
+		System.out.println(account);
 
 		if (newaccount){
             // add row to table
@@ -217,6 +233,7 @@ public class BankFrm extends javax.swing.JFrame
             JTable1.getSelectionModel().setAnchorSelectionIndex(-1);
             newaccount=false;
         }
+
 
        
         
@@ -233,6 +250,8 @@ public class BankFrm extends javax.swing.JFrame
 		JDialog_AddCompAcc pac = new JDialog_AddCompAcc(myframe);
 		pac.setBounds(450, 20, 300, 330);
 		pac.show();
+
+		bankingApplication.getAccountService().createAccount("Company", accountnr, 0, clientName, street, city, state, zip, email, LocalDate.of(2020, 4, 7), accountType, 0);
 		
 		if (newaccount){
             // add row to table
@@ -262,11 +281,15 @@ public class BankFrm extends javax.swing.JFrame
 		    dep.show();
     		
 		    // compute new amount
-            long deposit = Long.parseLong(amountDeposit);
+            double deposit = Double.valueOf(amountDeposit);
+			bankingApplication.getAccountService().deposit(accnr, deposit);
             String samount = (String)model.getValueAt(selection, 5);
-            long currentamount = Long.parseLong(samount);
-		    long newamount=currentamount+deposit;
+            double currentamount = Double.valueOf(samount);
+		    //long newamount=currentamount+deposit;
+			double newamount = bankingApplication.getAccountService().getAccount(accnr).getBalance();
+			System.out.println(newamount);
 		    model.setValueAt(String.valueOf(newamount),selection, 5);
+
 		}
 		
 		
@@ -285,10 +308,12 @@ public class BankFrm extends javax.swing.JFrame
 		    wd.show();
     		
 		    // compute new amount
-            long deposit = Long.parseLong(amountDeposit);
+            double amount = Double.valueOf(amountDeposit);
+			bankingApplication.getAccountService().withdraw(accnr, amount);
             String samount = (String)model.getValueAt(selection, 5);
-            long currentamount = Long.parseLong(samount);
-		    long newamount=currentamount-deposit;
+            double currentamount = Double.valueOf(samount);
+		    //double newamount=currentamount-amount;
+			double newamount = bankingApplication.getAccountService().getAccount(accnr).getBalance();
 		    model.setValueAt(String.valueOf(newamount),selection, 5);
 		    if (newamount <0){
 		       JOptionPane.showMessageDialog(JButton_Withdraw, " Account "+accnr+" : balance is negative: $"+String.valueOf(newamount)+" !","Warning: negative balance",JOptionPane.WARNING_MESSAGE);
@@ -301,6 +326,7 @@ public class BankFrm extends javax.swing.JFrame
 	void JButtonAddinterest_actionPerformed(java.awt.event.ActionEvent event)
 	{
 		  JOptionPane.showMessageDialog(JButton_Addinterest, "Add interest to all accounts","Add interest to all accounts",JOptionPane.WARNING_MESSAGE);
+		  bankingApplication.getAccountService().addInterest();
 	    
 	}
 }
