@@ -103,6 +103,7 @@ public class JDialog_AddCCAccount extends javax.swing.JDialog
 		JButton_OK.addActionListener(lSymAction);
 		JButton_Cancel.addActionListener(lSymAction);
 		JRadioButton_Bronze.addMouseListener(aSymMouse);
+		setLocationRelativeTo(null);
 		//}}
 	}
 
@@ -145,8 +146,6 @@ public class JDialog_AddCCAccount extends javax.swing.JDialog
 				JRadioButtonSav_mouseClicked(event);
 			else if (object == JRadioButton_Bronze)
 				JRadioButtonBronze_mouseClicked(event);
-			
-			
 		}
 	}
 

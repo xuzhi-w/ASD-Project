@@ -21,12 +21,9 @@ public class BankingApplication {
         this.accountService = accountService;
     }
 
+
     public List<AccountEntry> getAccountEntries(String accountNumber) {
         return accountService.getAccount(accountNumber).getEntryList().stream().toList();
-    }
-
-    public static void main(String[] args) {
-
     }
 
 }

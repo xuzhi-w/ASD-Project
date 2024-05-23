@@ -11,7 +11,6 @@ public abstract class Account implements Subject{
 
 	private Customer customer;
 
-	private String customerID;
 	private String accountNumber;
 	private double balance;
 
@@ -28,10 +27,6 @@ public abstract class Account implements Subject{
 		this.observers = new ArrayList<>();
 		this.entryList = new ArrayList<>();
 		registerObserver(EmailSenderSingleton.getInstance());
-	}
-
-	public String getCustomerID() {
-		return customerID;
 	}
 
 	public String getAccountNumber() {

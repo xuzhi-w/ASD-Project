@@ -1,5 +1,8 @@
 package framework.domain;
 
+import banking.domain.BankAccount;
+import creditcard.domain.CreditCardAccount;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +15,9 @@ public class Customer {
 	private String email;
 	private LocalDate dateOfBirth;
 
-	private List<Account> accounts;
+	public void setCustomerID(String customerID) {
+		this.customerID = customerID;
+	}
 
 
 	public String getCustomerID() {
@@ -25,7 +30,6 @@ public class Customer {
 		this.address = address;
 		this.email = email;
 		this.dateOfBirth = dateOfBirth;
-		accounts = new ArrayList<>();
 	}
 
 	public String getName() {

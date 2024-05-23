@@ -88,6 +88,7 @@ public class JDialog_AddCompAcc extends javax.swing.JDialog
 		SymAction lSymAction = new SymAction();
 		JButton_OK.addActionListener(lSymAction);
 		JButton_Calcel.addActionListener(lSymAction);
+		setLocationRelativeTo(null);
 		//}}
 	}
 
