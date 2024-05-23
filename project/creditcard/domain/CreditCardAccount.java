@@ -88,17 +88,9 @@ public class CreditCardAccount extends Account {
     private double totalCharges2 = 0.0;
     private double totalCredits = 0.0;
     private double newBalance = 0.0;
-//    @Override
-//    public void generateReport() {
-//        System.out.println("Account number: "+ getAccountNumber());
-//        System.out.println("Previous balance: "+ getAccountBalance());
-//        System.out.println("Total charges: "+ getTotalCharges());
-//        System.out.println("Total credit: "+ getTotalCredit());
-//        calculateCurrentBalance();
-//        System.out.println("New balance: "+ getAccountBalance());
-//        System.out.println("Total Due: "+ getTotalDue());
-//>>>>>>> 7b61b80e6acfc01a7a5a5dd0730dac74c84f8413
-//    }
+    private double totalDue2 = 0.0;
+
+
     public double getTotalCharges2() {
         return totalCharges2;
     }
@@ -106,8 +98,6 @@ public class CreditCardAccount extends Account {
     public double getTotalDue2() {
         return totalDue2;
     }
-
-    double totalDue2 = 0.0;
 
     public double getPreviousBalance() {
         return previousBalance;
@@ -148,6 +138,18 @@ public class CreditCardAccount extends Account {
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return localDate;
     }
+
+//    @Override
+//    public void generateReport() {
+//        System.out.println("Account number: "+ getAccountNumber());
+//        System.out.println("Previous balance: "+ getAccountBalance());
+//        System.out.println("Total charges: "+ getTotalCharges());
+//        System.out.println("Total credit: "+ getTotalCredit());
+//        calculateCurrentBalance();
+//        System.out.println("New balance: "+ getAccountBalance());
+//        System.out.println("Total Due: "+ getTotalDue());
+//
+//    }
 
     public double getTotalCharges(){
         double balance = 0;

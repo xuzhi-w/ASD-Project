@@ -1,19 +1,10 @@
 package ui.bank;
 
 import banking.data.BankingAccountDAO;
-import banking.domain.BankAccount;
-import banking.domain.PersonalBankAccount;
-import framework.TransactionRecordsWindow;
 import framework.data.AccountDAO;
-import framework.domain.*;
-import framework.utils.AccountCategory;
-
-
 import framework.service.AccountService;
 import framework.domain.Account;
 import framework.domain.AccountTypeEnum;
-import framework.domain.Address;
-import framework.domain.Customer;
 import ui.BankingApplication;
 
 
@@ -21,8 +12,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.LocalDate;
-import java.util.*;
-import java.time.format.DateTimeFormatter;
 
 /**
  * A basic JFC based application.
@@ -35,7 +24,6 @@ public class BankFrm extends javax.swing.JFrame
     /****
      * init variables in the object
      ****/
-
 	BankingApplication bankingApplication;
 
     String accountnr, clientName,street,city,zip,state,clientType,amountDeposit, email, birthDate;
@@ -126,23 +114,6 @@ public class BankFrm extends javax.swing.JFrame
 		bankingApplication = new BankingApplication();
 	}
 
-	private Object[][] addSomeData() {
-		Object[][] data = new Object[1][6];
-		data[0][0] = "1001";
-		data[0][1] = "John Doe";
-		data[0][2] = "1000N 4Th ST";
-		data[0][3] = "P";
-		data[0][4] = "Sa";
-		data[0][5] = "10000.00";
-		Address address = new Address("1000N 4Th ST","Fairfield","IA","52556");
-		Customer customer = new Customer("John Doe",address,"johndoe@gmail.com", LocalDate.of(1991,3,23));
-		Account account = new PersonalBankAccount("1001",10000.00,customer);
-		AccountEntry entry = new AccountEntry(10000.00,"first deposit","","", TransactionType.DEPOSIT);
-		account.addEntry(entry);
-		bankDao.saveAccount(account);
-		// put some entries to these accounts
-		return data;
-	}
 
 	/*****************************************************
 	 * The entry point for this application.
@@ -292,11 +263,6 @@ public class BankFrm extends javax.swing.JFrame
             JTable1.getSelectionModel().setAnchorSelectionIndex(-1);
             newaccount=false;
         }
-		Address address = new Address(street,city,state,zip);
-		Customer customer = new Customer(clientName,address,email, LocalDate.parse(birthDate));
-		Account account = new PersonalBankAccount(accountnr,0.00,customer);
-		bankDao.saveAccount(account);
-
     }
 
 	/**
@@ -329,7 +295,6 @@ public class BankFrm extends javax.swing.JFrame
 		bankingApplication.getAccountService().createAccount("Company", accountnr,
 				0, clientName, street, city, state, zip, email,
 				LocalDate.of(2020, 4, 7), accountType, 0);
-		
 		if (newaccount){
             // add row to table
             rowdata[0] = accountnr;
@@ -356,15 +321,8 @@ public class BankFrm extends javax.swing.JFrame
 		    JDialog_Deposit dep = new JDialog_Deposit(myframe,accnr);
 		    dep.setBounds(430, 15, 275, 140);
 		    dep.show();
-
             double deposit = Double.valueOf(amountDeposit);
 			bankingApplication.getAccountService().deposit(accnr, deposit);
-            //String samount = (String)model.getValueAt(selection, 5);
-            //double currentamount = Double.valueOf(samount);
-		    //long newamount=currentamount+deposit;
-			//double newamount = bankingApplication.getAccountService().getAccount(accnr).getBalance();
-			//System.out.println(newamount);
-		    //model.setValueAt(String.valueOf(newamount),selection, 5);
 			updateAmount(selection, accnr);
 		}
 		
@@ -382,30 +340,15 @@ public class BankFrm extends javax.swing.JFrame
 		    JDialog_Withdraw wd = new JDialog_Withdraw(myframe,accnr);
 		    wd.setBounds(430, 15, 275, 140);
 		    wd.show();
-    		
-		    // compute new amount
-//			double deposit = Double.parseDouble(amountDeposit);
-//            String samount = (String)model.getValueAt(selection, 5);
-//			double currentamount = Double.parseDouble(samount);
-////			double newamount=currentamount-deposit;
+
             double amount = Double.valueOf(amountDeposit);
 			bankingApplication.getAccountService().withdraw(accnr, amount);
-            //String samount = (String)model.getValueAt(selection, 5);
-            //double currentamount = Double.valueOf(samount);
-		    //double newamount=currentamount-amount;
 			double newamount = bankingApplication.getAccountService().getAccount(accnr).getBalance();
-		    //model.setValueAt(String.valueOf(newamount),selection, 5);
 			updateAmount(selection, accnr);
 		    if (newamount <0){
-//				JOptionPane.showMessageDialog(JButton_Withdraw, " Account "+accnr+" : balance is negative: $"+String.valueOf(newamount)+" !"
-//				,"Warning: negative balance",JOptionPane.WARNING_MESSAGE);
-				JOptionPane.showMessageDialog(JButton_Withdraw, " Account "+accnr+" : Withdraw Amount is more than balance: $"
-						+String.valueOf(newamount)+" !","Warning: balance not enough",JOptionPane.WARNING_MESSAGE);
-				return ;
+				JOptionPane.showMessageDialog(JButton_Withdraw, " Account "+accnr+" : balance is negative: $"+String.valueOf(newamount)+" !"
+				,"Warning: negative balance",JOptionPane.WARNING_MESSAGE);
 			}
-//			model.setValueAt(String.valueOf(newamount),selection, 5);
-//			AccountEntry entry = new AccountEntry(-amount,"withdraw","","",TransactionType.WITHDRAW);
-//			currentAccount.addEntry(entry);
 		}
 		
 		
