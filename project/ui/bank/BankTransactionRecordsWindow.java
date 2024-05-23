@@ -1,33 +1,22 @@
 package ui.bank;
 
-import banking.data.BankingAccountDAO;
+import framework.domain.Account;
 import framework.domain.AccountEntry;
+import framework.utils.CommonRecordsWindow;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
-public class BankTransactionRecordsWindow extends JFrame {
+public class BankTransactionRecordsWindow extends CommonRecordsWindow {
 
-    private BankingAccountDAO bankAccountDAO = new BankingAccountDAO();
-    private List<AccountEntry> entries;
-
-    public BankTransactionRecordsWindow(String accountNumber, List<AccountEntry> entries) {
-        this.entries = entries;
-        setTitle("All Records of Customer's Accounts: " + accountNumber );
-        setSize(800, 600);
-
-        // Assuming you have a method to retrieve transaction records based on the account name
-        DefaultTableModel transactionModel = getTransactionRecords(accountNumber);
-        JTable transactionTable = new JTable(transactionModel);
-        JScrollPane scrollPane = new JScrollPane(transactionTable);
-        add(scrollPane, BorderLayout.CENTER);
-        setVisible(true);
-        setLocationRelativeTo(null);
+//
+    public BankTransactionRecordsWindow(Account account) {
+        super(account);
     }
 
-    private DefaultTableModel getTransactionRecords(String accountNumber) {
+    public DefaultTableModel getTransactionRecords(String accountNumber,List<AccountEntry> entries) {
         // Implement this method to retrieve transaction records based on the account name
         // This could involve querying a database or accessing some data source
         // For demonstration purposes, let's assume a simple DefaultTableModel
@@ -51,4 +40,18 @@ public class BankTransactionRecordsWindow extends JFrame {
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
         return model;
     }
+
+    @Override
+    protected void prepareWindow(DefaultTableModel model,String accountNumber) {
+        setTitle("All Records of Customer's Accounts: " + accountNumber );
+        setSize(800, 600);
+        // Assuming you have a method to retrieve transaction records based on the account name
+        JTable transactionTable = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(transactionTable);
+        add(scrollPane, BorderLayout.CENTER);
+        setVisible(true);
+        setLocationRelativeTo(null);
+    }
+
+
 }

@@ -6,6 +6,7 @@ import framework.data.AccountDAO;
 import framework.service.AccountService;
 import framework.domain.Account;
 import framework.domain.AccountTypeEnum;
+import framework.utils.CommonRecordsWindow;
 import ui.BankingApplication;
 
 
@@ -276,9 +277,8 @@ public class BankFrm extends javax.swing.JFrame
 		int selection = JTable1.getSelectionModel().getMinSelectionIndex();
 		if(selection != -1){
 			String accountNumber = (String)model.getValueAt(selection, 0);
-			BankTransactionRecordsWindow recordsWindow =
-					new BankTransactionRecordsWindow(accountNumber,
-							bankingApplication.getAccountEntries(accountNumber));
+			CommonRecordsWindow recordsWindow =
+					new BankTransactionRecordsWindow(bankingApplication.getAccount(accountNumber));
 		}
 	}
 
