@@ -58,6 +58,7 @@ public class JDialogGenBill extends javax.swing.JDialog
 		//{{REGISTER_LISTENERS
 		SymAction lSymAction = new SymAction();
 		JButton_OK.addActionListener(lSymAction);
+		setLocationRelativeTo(null);
 		//}}
 	}
 

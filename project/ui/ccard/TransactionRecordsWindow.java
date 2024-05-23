@@ -46,6 +46,7 @@ public class TransactionRecordsWindow extends JFrame {
 
 
         setVisible(true);
+        setLocationRelativeTo(null);
     }
 
     private DefaultTableModel getTransactionRecords(String accountNumber) {

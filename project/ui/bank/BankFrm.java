@@ -1,21 +1,17 @@
 package ui.bank;
 
-
-
+import banking.data.BankingAccountDAO;
+import framework.data.AccountDAO;
 import framework.service.AccountService;
 import framework.domain.Account;
 import framework.domain.AccountTypeEnum;
-import framework.domain.Address;
-import framework.domain.Customer;
 import ui.BankingApplication;
-import ui.ccard.TransactionRecordsWindow;
 
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 /**
  * A basic JFC based application.
@@ -33,12 +29,15 @@ public class BankFrm extends javax.swing.JFrame
     String accountnr, clientName,street,city,zip,state,clientType,amountDeposit, email, birthDate;
 	AccountTypeEnum accountType;
     boolean newaccount;
-    private DefaultTableModel model;
+    private static DefaultTableModel model;
     private JTable JTable1;
     private JScrollPane JScrollPane1;
     BankFrm myframe;
     private Object rowdata[];
-    
+
+	private AccountDAO bankDao = new BankingAccountDAO();
+	private Account currentAccount;
+
 	public BankFrm()
 	{
 		myframe = this;
@@ -57,15 +56,14 @@ public class BankFrm extends javax.swing.JFrame
 		/Deposit, Withdraw and Exit from the system
 		*/
         JScrollPane1 = new JScrollPane();
-        model = new DefaultTableModel();
-        JTable1 = new JTable(model);
-        model.addColumn("AccountNr");
-        model.addColumn("Name");
-        model.addColumn("City");
-        model.addColumn("P/C");
-        model.addColumn("Ch/S");
-        model.addColumn("Amount");
-        rowdata = new Object[8];
+		//add some data , for demo use only
+//		Object[][] data = addSomeData();
+		Object[][] data = new Object[0][6];
+		String[] columns = {"AccountNr","Name","City","P/C","Ch/S","Amount"};
+
+		model = new DefaultTableModel(data,columns);
+		JTable1 = new JTable(model);
+		rowdata = new Object[8];
         newaccount=false;
         
         
@@ -100,10 +98,6 @@ public class BankFrm extends javax.swing.JFrame
 		JButton_Exit.setText("Exit");
 		JPanel1.add(JButton_Exit);
 		JButton_Exit.setBounds(468,248,96,31);
-		// lineBorder1.setRoundedCorners(true);
-		// lineBorder1.setLineColor(java.awt.Color.green);
-		//$$ lineBorder1.move(24,312);
-
 		JButton_PerAC.setActionCommand("jbutton");
 
 		SymWindow aSymWindow = new SymWindow();
@@ -116,12 +110,11 @@ public class BankFrm extends javax.swing.JFrame
 		JButton_Withdraw.addActionListener(lSymAction);
 		JButton_Addinterest.addActionListener(lSymAction);
 		JButton_GenerateReport.addActionListener(lSymAction);
-
+		setLocationRelativeTo(null);
 		bankingApplication = new BankingApplication();
-		
 	}
 
-	
+
 	/*****************************************************
 	 * The entry point for this application.
 	 * Sets the Look and Feel to the System Look and Feel.
@@ -147,7 +140,9 @@ public class BankFrm extends javax.swing.JFrame
 			//Ensure the application exits with an error condition.
 			System.exit(1);
 		}
+
 	}
+
 
 
 	javax.swing.JPanel JPanel1 = new javax.swing.JPanel();
@@ -213,8 +208,6 @@ public class BankFrm extends javax.swing.JFrame
 			else if (object == JButton_Addinterest)
 				JButtonAddinterest_actionPerformed(event);
 			else if (object == JButton_GenerateReport){
-				//checkSelected();
-				//JButton_GenerateReport_actionPerformed(event);
 				if(checkSelected()){
 					JButton_GenerateReport_actionPerformed(event);
 				};
@@ -255,10 +248,9 @@ public class BankFrm extends javax.swing.JFrame
 		JDialog_AddPAcc pac = new JDialog_AddPAcc(myframe);
 		pac.setBounds(450, 20, 300, 330);
 		pac.show();
-		bankingApplication.getAccountService().createAccount("Personal", accountnr, 0, clientName, street, city, state, zip, email, LocalDate.of(2020, 4, 7), accountType, 0);
-		//Account account = bankingApplication.getAccountService().getAccount(accountnr);
-		//System.out.println(account);
-
+		bankingApplication.getAccountService().createAccount("Personal", accountnr,
+				0, clientName, street, city, state, zip, email,
+				LocalDate.of(2020, 4, 7), accountType, 0);
 		if (newaccount){
             // add row to table
             rowdata[0] = accountnr;
@@ -271,27 +263,21 @@ public class BankFrm extends javax.swing.JFrame
             JTable1.getSelectionModel().setAnchorSelectionIndex(-1);
             newaccount=false;
         }
-
-
-       
-        
     }
 
+	/**
+	 * Generate Report
+	 * @param event
+	 */
 	void JButton_GenerateReport_actionPerformed(java.awt.event.ActionEvent event)
 	{
-		/*
-		 JDialog_AddPAcc type object is for adding personal information
-		 construct a JDialog_AddPAcc type object
-		 set the boundaries and show it
-		*/
-
 		int selection = JTable1.getSelectionModel().getMinSelectionIndex();
 		if(selection != -1){
 			String accountNumber = (String)model.getValueAt(selection, 0);
-			System.out.println(accountNumber);
-			BankTransactionRecordsWindow recordsWindow = new BankTransactionRecordsWindow(accountNumber, bankingApplication.getAccountEntries(accountNumber));
+			BankTransactionRecordsWindow recordsWindow =
+					new BankTransactionRecordsWindow(accountNumber,
+							bankingApplication.getAccountEntries(accountNumber));
 		}
-
 	}
 
 	void JButtonCompAC_actionPerformed(java.awt.event.ActionEvent event)
@@ -306,8 +292,9 @@ public class BankFrm extends javax.swing.JFrame
 		pac.setBounds(450, 20, 300, 330);
 		pac.show();
 
-		bankingApplication.getAccountService().createAccount("Company", accountnr, 0, clientName, street, city, state, zip, email, LocalDate.of(2020, 4, 7), accountType, 0);
-		
+		bankingApplication.getAccountService().createAccount("Company", accountnr,
+				0, clientName, street, city, state, zip, email,
+				LocalDate.of(2020, 4, 7), accountType, 0);
 		if (newaccount){
             // add row to table
             rowdata[0] = accountnr;
@@ -322,7 +309,6 @@ public class BankFrm extends javax.swing.JFrame
         }
 
 	}
-
 	void JButtonDeposit_actionPerformed(java.awt.event.ActionEvent event)
 	{
 	    // get selected name
@@ -330,23 +316,14 @@ public class BankFrm extends javax.swing.JFrame
 		//System.out.println(selection);
         if (selection >=0){
             String accnr = (String)model.getValueAt(selection, 0);
-    	    
+			currentAccount = bankDao.loadAccount(accnr);
 		    //Show the dialog for adding deposit amount for the current mane
 		    JDialog_Deposit dep = new JDialog_Deposit(myframe,accnr);
 		    dep.setBounds(430, 15, 275, 140);
 		    dep.show();
-    		
-		    // compute new amount
             double deposit = Double.valueOf(amountDeposit);
 			bankingApplication.getAccountService().deposit(accnr, deposit);
-            //String samount = (String)model.getValueAt(selection, 5);
-            //double currentamount = Double.valueOf(samount);
-		    //long newamount=currentamount+deposit;
-			//double newamount = bankingApplication.getAccountService().getAccount(accnr).getBalance();
-			//System.out.println(newamount);
-		    //model.setValueAt(String.valueOf(newamount),selection, 5);
 			updateAmount(selection, accnr);
-
 		}
 		
 		
@@ -358,24 +335,20 @@ public class BankFrm extends javax.swing.JFrame
         int selection = JTable1.getSelectionModel().getMinSelectionIndex();
         if (selection >=0){
             String accnr = (String)model.getValueAt(selection, 0);
-
+			currentAccount = bankDao.loadAccount(accnr);
 		    //Show the dialog for adding withdraw amount for the current mane
 		    JDialog_Withdraw wd = new JDialog_Withdraw(myframe,accnr);
 		    wd.setBounds(430, 15, 275, 140);
 		    wd.show();
-    		
-		    // compute new amount
+
             double amount = Double.valueOf(amountDeposit);
 			bankingApplication.getAccountService().withdraw(accnr, amount);
-            //String samount = (String)model.getValueAt(selection, 5);
-            //double currentamount = Double.valueOf(samount);
-		    //double newamount=currentamount-amount;
 			double newamount = bankingApplication.getAccountService().getAccount(accnr).getBalance();
-		    //model.setValueAt(String.valueOf(newamount),selection, 5);
 			updateAmount(selection, accnr);
 		    if (newamount <0){
-		       JOptionPane.showMessageDialog(JButton_Withdraw, " Account "+accnr+" : balance is negative: $"+String.valueOf(newamount)+" !","Warning: negative balance",JOptionPane.WARNING_MESSAGE);
-		    }
+				JOptionPane.showMessageDialog(JButton_Withdraw, " Account "+accnr+" : balance is negative: $"+String.valueOf(newamount)+" !"
+				,"Warning: negative balance",JOptionPane.WARNING_MESSAGE);
+			}
 		}
 		
 		

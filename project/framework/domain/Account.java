@@ -1,5 +1,6 @@
 package framework.domain;
 
+import framework.integration.EmailSender;
 import framework.integration.Observer;
 
 import java.util.ArrayList;
@@ -10,7 +11,6 @@ public abstract class Account implements Subject{
 
 	private Customer customer;
 
-	private String customerID;
 	private String accountNumber;
 	private double balance;
 
@@ -26,10 +26,7 @@ public abstract class Account implements Subject{
 		this.balance = 0;
 		this.observers = new ArrayList<>();
 		this.entryList = new ArrayList<>();
-	}
-
-	public String getCustomerID() {
-		return customerID;
+		registerObserver(EmailSender.getInstance());
 	}
 
 	public String getAccountNumber() {

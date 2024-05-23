@@ -29,13 +29,5 @@ public class Application {
 
 
 		creditcard.generateReport();
-
-  }
+	}
 }
-
-
-
-
-
-
-

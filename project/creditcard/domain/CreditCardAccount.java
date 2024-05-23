@@ -5,12 +5,67 @@ import framework.domain.AccountEntry;
 import framework.domain.Customer;
 import framework.domain.TransactionType;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
 public class CreditCardAccount extends Account {
 
+    private String type;
+    private double MP;
+    private double MI;
+    public String getType() {
+        return type;
+    }
 
+    /**
+     * get minimum payment,Gold
+     * @return
+     */
+    public double getMP(){
+        return MP;
+    }
+
+    /**
+     * get monthly interest
+     * @return
+     */
+    public double getMI(){
+        return MI;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public CreditCardAccount(String accountNumber, double balance, Customer customer) {
         super(accountNumber, balance, customer);
+    }
+
+    /**
+     *
+     * @param accountNumber
+     * @param balance
+     * @param customer
+     * @param type Gold Silver Bronze
+     */
+    public CreditCardAccount(String accountNumber, double balance, Customer customer, String type) {
+        super(accountNumber, balance, customer);
+        this.type = type;
+
+        if(type == "Gold"){
+            MI = 0.06;
+            MP = 0.10;
+        }else if (type == "Silver"){
+            MI = 0.08;
+            MP = 0.12;
+        }else if(type == "Bronze"){
+            MI = 0.10;
+            MP = 0.14;
+        }
     }
 
     @Override
@@ -29,18 +84,72 @@ public class CreditCardAccount extends Account {
         addEntry(entry);
     }
 
+    private double previousBalance = 0.0;
+    private double totalCharges2 = 0.0;
+    private double totalCredits = 0.0;
+    private double newBalance = 0.0;
+    private double totalDue2 = 0.0;
 
+
+    public double getTotalCharges2() {
+        return totalCharges2;
+    }
+
+    public double getTotalDue2() {
+        return totalDue2;
+    }
+
+    public double getPreviousBalance() {
+        return previousBalance;
+    }
+
+    public double getTotalCredits() {
+        return totalCredits;
+    }
+
+    public double getNewBalance() {
+        return newBalance;
+    }
+    /**
+     * this method returns five values: 1.previous balance,
+     * 2.total charges,3.total credits,4.new balance,5.total due
+     */
     @Override
     public void generateReport() {
-        System.out.println("Account number: "+ getAccountNumber());
-        System.out.println("Previous balance: "+ getAccountBalance());
-        System.out.println("Total charges: "+ getTotalCharges());
-        System.out.println("Total credit: "+ getTotalCredit());
-        calculateCurrentBalance();
-        System.out.println("New balance: "+ getAccountBalance());
-        System.out.println("Total Due: "+ getTotalDue());
-
+        LocalDate firstDay = LocalDate.now().withDayOfMonth(1);
+        Predicate<AccountEntry> before = e -> convertDateToLocalDate(e.getDate()).isBefore(firstDay);
+        List<AccountEntry> entryBefore = this.getEntryList().stream().filter(before).collect(Collectors.toList());
+        List<AccountEntry> entryCurrentMonth = this.getEntryList().stream().filter(before.negate()).collect(Collectors.toList());
+        for(AccountEntry entry : entryBefore){
+            previousBalance += entry.getAmount();
+        }
+        for(AccountEntry entry : entryCurrentMonth){
+            if(entry.getTransactionType().equals(TransactionType.DEPOSIT)){
+                totalCredits += entry.getAmount();
+            }else if(entry.getTransactionType().equals(TransactionType.WITHDRAW)){
+                totalCharges2 += entry.getAmount();
+            }
+        }
+        newBalance = previousBalance + totalCredits + totalCharges2 + MI * (previousBalance+totalCredits);
+        totalDue2 = MP * newBalance;
     }
+
+    public LocalDate convertDateToLocalDate(Date date){
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return localDate;
+    }
+
+//    @Override
+//    public void generateReport() {
+//        System.out.println("Account number: "+ getAccountNumber());
+//        System.out.println("Previous balance: "+ getAccountBalance());
+//        System.out.println("Total charges: "+ getTotalCharges());
+//        System.out.println("Total credit: "+ getTotalCredit());
+//        calculateCurrentBalance();
+//        System.out.println("New balance: "+ getAccountBalance());
+//        System.out.println("Total Due: "+ getTotalDue());
+//
+//    }
 
     public double getTotalCharges(){
         double balance = 0;

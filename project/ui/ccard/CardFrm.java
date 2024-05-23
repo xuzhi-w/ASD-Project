@@ -1,11 +1,15 @@
 package ui.ccard;
+import creditcard.data.CreditAccountDAO;
+import creditcard.domain.CreditCardAccount;
+import framework.data.AccountDAO;
+import framework.domain.*;
 
 import framework.domain.AccountTypeEnum;
 import ui.CreditCardApplication;
 
 import java.awt.BorderLayout;
 import java.time.LocalDate;
-
+import java.util.Collection;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -32,6 +36,9 @@ public class CardFrm extends javax.swing.JFrame
     private Object rowdata[];
 
 	private String accountNumber;
+
+	private AccountDAO dao = new CreditAccountDAO();
+	private Collection<Account> daoAccounts =  dao.getAccounts();
     
 	public CardFrm()
 	{
@@ -51,14 +58,11 @@ public class CardFrm extends javax.swing.JFrame
 		/Deposit, Withdraw and Exit from the system
 		*/
         JScrollPane1 = new JScrollPane();
-        model = new DefaultTableModel();
-        JTable1 = new JTable(model);
-        model.addColumn("Name");
-        model.addColumn("CC number");
-        model.addColumn("Exp date");
-        model.addColumn("Type");
-        model.addColumn("Balance");
-        rowdata = new Object[7];
+		Object[][] data = new Object[0][5];
+		String[] columns = new String[]{"Name","CC number","Exp date","Type","Balance"};
+		model = new DefaultTableModel(data,columns);
+		JTable1 = new JTable(model);
+		rowdata = new Object[7];
         newaccount=false;
         
         
@@ -68,10 +72,10 @@ public class CardFrm extends javax.swing.JFrame
         JTable1.setBounds(0, 0, 420, 0);
 //        rowdata = new Object[8];
 		
-		JButton_NewCCAccount.setText("Add Credit-card account");
+		JButton_NewCCAccount.setText("Add Credit-card Account");
 		JPanel1.add(JButton_NewCCAccount);
 		JButton_NewCCAccount.setBounds(24,20,192,33);
-		JButton_GenBill.setText("Generate Monthly bills");
+		JButton_GenBill.setText("Generate Monthly Bills");
 		JButton_GenBill.setActionCommand("jbutton");
 		JPanel1.add(JButton_GenBill);
 		JButton_GenBill.setBounds(240,20,192,33);
@@ -96,11 +100,11 @@ public class CardFrm extends javax.swing.JFrame
 		JButton_GenBill.addActionListener(lSymAction);
 		JButton_Deposit.addActionListener(lSymAction);
 		JButton_Withdraw.addActionListener(lSymAction);
-
+		setLocationRelativeTo(null);
 		creditCardApplication = new CreditCardApplication();
 	}
 
-	
+
 	/*****************************************************
 	 * The entry point for this application.
 	 * Sets the Look and Feel to the System Look and Feel.
@@ -136,7 +140,7 @@ public class CardFrm extends javax.swing.JFrame
 	javax.swing.JButton JButton_Withdraw = new javax.swing.JButton();
 	javax.swing.JButton JButton_Exit = new javax.swing.JButton();
 
-
+	Account currentAccount;
 	void exitApplication()
 	{
 		try {
@@ -241,28 +245,23 @@ public class CardFrm extends javax.swing.JFrame
             JTable1.getSelectionModel().setAnchorSelectionIndex(-1);
             newaccount=false;
         }
-
-       
-        
     }
 
 	void JButtonGenerateBill_actionPerformed(java.awt.event.ActionEvent event)
 	{
-//		JDialogGenBill billFrm = new JDialogGenBill();
-//		billFrm.setBounds(450, 20, 400, 350);
-//		billFrm.show();
 
 		int selection = JTable1.getSelectionModel().getMinSelectionIndex();
 		if(selection != -1){
 			String accountNumber = (String)model.getValueAt(selection, 1);
-			TransactionRecordsWindow recordsWindow = creditCardApplication.createTransactionRecordsWindow(accountNumber);
+			TransactionRecordsWindow recordsWindow = creditCardApplication.
+					createTransactionRecordsWindow(accountNumber);
 		}
-
-
-		// Open the transaction records window for the selected account
-	    
 	}
 
+	/**
+	 * When deposit, the balance number goes down
+	 * @param event
+	 */
 	void JButtonDeposit_actionPerformed(java.awt.event.ActionEvent event)
 	{
 	    // get selected name
@@ -279,15 +278,15 @@ public class CardFrm extends javax.swing.JFrame
             double amount = Double.valueOf(amountDeposit);
 			creditCardApplication.deposit(accountNumber, amount);
 			updateAmount(selection, accountNumber);
-//            String samount = (String)model.getValueAt(selection, 4);
-//            long currentamount = Long.parseLong(samount);
-//		    long newamount=currentamount+deposit;
-//		    model.setValueAt(String.valueOf(newamount),selection, 4);
 		}
-		
+
 		
 	}
 
+	/**
+	 * To credit card , withdraw has the same meaning with charge,
+	 * thus you balance number goes up.
+	 */
 	void JButtonWithdraw_actionPerformed(java.awt.event.ActionEvent event)
 	{
 	    // get selected name
@@ -304,13 +303,12 @@ public class CardFrm extends javax.swing.JFrame
 			double amount = Double.valueOf(amountDeposit);
 			creditCardApplication.withdraw(accountNumber, amount);
 			updateAmount(selection, accountNumber);
-//            long deposit = Long.parseLong(amountDeposit);
-//            String samount = (String)model.getValueAt(selection, 4);
-//            long currentamount = Long.parseLong(samount);
 		    double newamount = creditCardApplication.getAccount(accountNumber).getAccountBalance();
-//		    model.setValueAt(String.valueOf(newamount),selection, 4);
 		    if (newamount <0){
-		       JOptionPane.showMessageDialog(JButton_Withdraw, " "+accountNumber+" Your balance is negative: $"+String.valueOf(newamount)+" !","Warning: negative balance",JOptionPane.WARNING_MESSAGE);
+		       JOptionPane.showMessageDialog(JButton_Withdraw, " "
+					   +accountNumber+" Your balance is negative: $"
+					   +String.valueOf(newamount)+" !","Warning: negative balance",
+					   JOptionPane.WARNING_MESSAGE);
 		    }
 		}
 		

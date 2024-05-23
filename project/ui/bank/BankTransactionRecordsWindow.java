@@ -22,10 +22,9 @@ public class BankTransactionRecordsWindow extends JFrame {
         DefaultTableModel transactionModel = getTransactionRecords(accountNumber);
         JTable transactionTable = new JTable(transactionModel);
         JScrollPane scrollPane = new JScrollPane(transactionTable);
-
         add(scrollPane, BorderLayout.CENTER);
-
         setVisible(true);
+        setLocationRelativeTo(null);
     }
 
     private DefaultTableModel getTransactionRecords(String accountNumber) {
