@@ -285,7 +285,6 @@ public class BankFrm extends javax.swing.JFrame
 			System.out.println(accountNumber);
 			BankTransactionRecordsWindow recordsWindow = new BankTransactionRecordsWindow(accountNumber, bankingApplication.getAccountEntries(accountNumber));
 		}
-
 	}
 
 	void JButtonCompAC_actionPerformed(java.awt.event.ActionEvent event)
