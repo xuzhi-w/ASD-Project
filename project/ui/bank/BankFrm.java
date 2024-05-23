@@ -364,7 +364,6 @@ public class BankFrm extends javax.swing.JFrame
 		  for(int i=0;i<num;i++){
 			  updateAmount(i, model.getValueAt(i, 0).toString());
 		  }
-	    
 	}
 
 	private void updateAmount(int selectedRow,String accountNumber){
