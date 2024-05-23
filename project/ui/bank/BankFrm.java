@@ -333,6 +333,7 @@ public class BankFrm extends javax.swing.JFrame
 	{
 	    // get selected name
         int selection = JTable1.getSelectionModel().getMinSelectionIndex();
+		//System.out.println(selection);
         if (selection >=0){
             String accnr = (String)model.getValueAt(selection, 0);
     	    
@@ -344,12 +345,13 @@ public class BankFrm extends javax.swing.JFrame
 		    // compute new amount
             double deposit = Double.valueOf(amountDeposit);
 			bankingApplication.getAccountService().deposit(accnr, deposit);
-            String samount = (String)model.getValueAt(selection, 5);
-            double currentamount = Double.valueOf(samount);
+            //String samount = (String)model.getValueAt(selection, 5);
+            //double currentamount = Double.valueOf(samount);
 		    //long newamount=currentamount+deposit;
-			double newamount = bankingApplication.getAccountService().getAccount(accnr).getBalance();
-			System.out.println(newamount);
-		    model.setValueAt(String.valueOf(newamount),selection, 5);
+			//double newamount = bankingApplication.getAccountService().getAccount(accnr).getBalance();
+			//System.out.println(newamount);
+		    //model.setValueAt(String.valueOf(newamount),selection, 5);
+			updateAmount(selection, accnr);
 
 		}
 		
@@ -371,11 +373,12 @@ public class BankFrm extends javax.swing.JFrame
 		    // compute new amount
             double amount = Double.valueOf(amountDeposit);
 			bankingApplication.getAccountService().withdraw(accnr, amount);
-            String samount = (String)model.getValueAt(selection, 5);
-            double currentamount = Double.valueOf(samount);
+            //String samount = (String)model.getValueAt(selection, 5);
+            //double currentamount = Double.valueOf(samount);
 		    //double newamount=currentamount-amount;
 			double newamount = bankingApplication.getAccountService().getAccount(accnr).getBalance();
-		    model.setValueAt(String.valueOf(newamount),selection, 5);
+		    //model.setValueAt(String.valueOf(newamount),selection, 5);
+			updateAmount(selection, accnr);
 		    if (newamount <0){
 		       JOptionPane.showMessageDialog(JButton_Withdraw, " Account "+accnr+" : balance is negative: $"+String.valueOf(newamount)+" !","Warning: negative balance",JOptionPane.WARNING_MESSAGE);
 		    }
@@ -388,7 +391,15 @@ public class BankFrm extends javax.swing.JFrame
 	{
 		  JOptionPane.showMessageDialog(JButton_Addinterest, "Add interest to all accounts","Add interest to all accounts",JOptionPane.WARNING_MESSAGE);
 		  bankingApplication.getAccountService().addInterest();
-
+		  int num = model.getRowCount();
+		  for(int i=0;i<num;i++){
+			  updateAmount(i, model.getValueAt(i, 0).toString());
+		  }
 	    
+	}
+
+	private void updateAmount(int selectedRow,String accountNumber){
+		double newamount = bankingApplication.getAccountService().getAccount(accountNumber).getBalance();
+		model.setValueAt(String.valueOf(newamount), selectedRow, 5);
 	}
 }
