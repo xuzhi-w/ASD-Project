@@ -2,18 +2,17 @@ package ui.bank;
 
 import banking.data.BankingAccountDAO;
 import banking.domain.BankAccount;
+import banking.domain.PersonalBankAccount;
 import framework.TransactionRecordsWindow;
 import framework.data.AccountDAO;
-import framework.domain.Account;
-import framework.domain.AccountEntry;
+import framework.domain.*;
+import framework.utils.AccountCategory;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Random;
+import java.time.LocalDate;
+import java.util.*;
 
 /**
  * A basic JFC based application.
@@ -23,7 +22,7 @@ public class BankFrm extends javax.swing.JFrame
     /****
      * init variables in the object
      ****/
-    String accountnr, clientName,street,city,zip,state,accountType,clientType,amountDeposit;
+    String accountnr, clientName,street,city,zip,birthday,state,accountType,clientType,amountDeposit,email;
     boolean newaccount;
     private static DefaultTableModel model;
     private JTable JTable1;
@@ -31,11 +30,8 @@ public class BankFrm extends javax.swing.JFrame
     BankFrm myframe;
     private Object rowdata[];
 
-	private AccountDAO bankDao  = new BankingAccountDAO();
-    private Collection<Account> daoAccounts =  bankDao.getAccounts();
-
-	private ArrayList<Account> accountList = new ArrayList<>();
-
+	private AccountDAO bankDao = new BankingAccountDAO();
+	private Account currentAccount;
 
 	public BankFrm()
 	{
@@ -119,32 +115,20 @@ public class BankFrm extends javax.swing.JFrame
 		setLocationRelativeTo(null);
 	}
 
-	private static Object[][] addSomeData() {
-		Object[][] data = new Object[5][6];
-		/**
-		 *  model.addColumn("AccountNr");
-		 *         model.addColumn("Name");
-		 *         model.addColumn("City");
-		 *         model.addColumn("P/C");
-		 *         model.addColumn("Ch/S");
-		 *         model.addColumn("Amount");
-		 */
-		Random random = new Random();
-
-		// Generate a random double value with two decimal places between 0 and 100
-		for(int i = 0; i < 5; i++){
-			data[i][0] = "1000"+i;
-			data[i][1] = "John"+i;
-			data[i][2] = "York"+i;
-			data[i][3] = i % 2 == 0 ? "P":"C";
-			data[i][4] = i % 2 == 1 ? "Ch":"Sa";
-			double randomDouble = Math.round(random.nextDouble()  * 100.0) / 100.0;
-			data[i][5] = 10000 + random.nextInt(1000000) +  randomDouble;
-
-
-
-		}
-
+	private Object[][] addSomeData() {
+		Object[][] data = new Object[1][6];
+		data[0][0] = "1001";
+		data[0][1] = "John Doe";
+		data[0][2] = "1000N 4Th ST";
+		data[0][3] = "P";
+		data[0][4] = "Sa";
+		data[0][5] = "10000.00";
+		Address address = new Address("1000N 4Th ST","Fairfield","IA","52556");
+		Customer customer = new Customer("John Doe",address,"johndoe@gmail.com", LocalDate.of(1991,3,23));
+		Account account = new PersonalBankAccount("1001",10000.00,customer);
+		AccountEntry entry = new AccountEntry(10000.00,"first deposit","","", TransactionType.DEPOSIT);
+		account.addEntry(entry);
+		bankDao.saveAccount(account);
 		// put some entries to these accounts
 		return data;
 	}
@@ -300,9 +284,11 @@ public class BankFrm extends javax.swing.JFrame
             JTable1.getSelectionModel().setAnchorSelectionIndex(-1);
             newaccount=false;
         }
-
-       
-        
+		Address address = new Address(street,city,state,zip);
+		//String accountnr, clientName,street,city,zip,state,accountType,clientType,amountDeposit;
+		Customer customer = new Customer(clientName,address,email, LocalDate.parse(birthday));
+		Account account = new PersonalBankAccount(accountnr,0.00,customer);
+		bankDao.saveAccount(account);
     }
 
 	/**
@@ -316,11 +302,14 @@ public class BankFrm extends javax.swing.JFrame
 		 construct a JDialog_AddPAcc type object
 		 set the boundaries and show it
 		*/
-		TransactionRecordsWindow recordsWindow = new TransactionRecordsWindow(accountNumber);
-
-
-
-
+		int selectedRow = JTable1.getSelectedRow();
+		if (selectedRow != -1) {
+			// Get the account name from the selected row
+			String accountNumber = (String) model.getValueAt(selectedRow, 0);
+			currentAccount = bankDao.loadAccount(accountNumber);
+			// Open the transaction records window for the selected account
+			new TransactionRecordsWindow(bankDao,currentAccount);
+		}
 	}
 
 	void JButtonCompAC_actionPerformed(java.awt.event.ActionEvent event)
@@ -349,25 +338,26 @@ public class BankFrm extends javax.swing.JFrame
         }
 
 	}
-
 	void JButtonDeposit_actionPerformed(java.awt.event.ActionEvent event)
 	{
 	    // get selected name
         int selection = JTable1.getSelectionModel().getMinSelectionIndex();
         if (selection >=0){
             String accnr = (String)model.getValueAt(selection, 0);
-    	    
+			currentAccount = bankDao.loadAccount(accnr);
 		    //Show the dialog for adding deposit amount for the current mane
 		    JDialog_Deposit dep = new JDialog_Deposit(myframe,accnr);
 		    dep.setBounds(430, 15, 275, 140);
 		    dep.show();
     		
 		    // compute new amount
-            long deposit = Long.parseLong(amountDeposit);
+			double deposit = Long.parseLong(amountDeposit);
             String samount = (String)model.getValueAt(selection, 5);
-            long currentamount = Long.parseLong(samount);
-		    long newamount=currentamount+deposit;
+            double currentamount = Double.parseDouble(samount);
+			double newamount=currentamount+deposit;
 		    model.setValueAt(String.valueOf(newamount),selection, 5);
+			AccountEntry entry = new AccountEntry(deposit,"deposit","","",TransactionType.DEPOSIT);
+			currentAccount.addEntry(entry);
 		}
 		
 		
@@ -379,21 +369,25 @@ public class BankFrm extends javax.swing.JFrame
         int selection = JTable1.getSelectionModel().getMinSelectionIndex();
         if (selection >=0){
             String accnr = (String)model.getValueAt(selection, 0);
-
+			currentAccount = bankDao.loadAccount(accnr);
 		    //Show the dialog for adding withdraw amount for the current mane
 		    JDialog_Withdraw wd = new JDialog_Withdraw(myframe,accnr);
 		    wd.setBounds(430, 15, 275, 140);
 		    wd.show();
     		
 		    // compute new amount
-            long deposit = Long.parseLong(amountDeposit);
+			double deposit = Double.parseDouble(amountDeposit);
             String samount = (String)model.getValueAt(selection, 5);
-            long currentamount = Long.parseLong(samount);
-		    long newamount=currentamount-deposit;
-		    model.setValueAt(String.valueOf(newamount),selection, 5);
+			double currentamount = Double.parseDouble(samount);
+			double newamount=currentamount-deposit;
 		    if (newamount <0){
-		       JOptionPane.showMessageDialog(JButton_Withdraw, " Account "+accnr+" : balance is negative: $"+String.valueOf(newamount)+" !","Warning: negative balance",JOptionPane.WARNING_MESSAGE);
-		    }
+//				JOptionPane.showMessageDialog(JButton_Withdraw, " Account "+accnr+" : balance is negative: $"+String.valueOf(newamount)+" !","Warning: negative balance",JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(JButton_Withdraw, " Account "+accnr+" : Withdraw Amount is more than balance: $"+String.valueOf(currentamount)+" !","Warning: balance not enough",JOptionPane.WARNING_MESSAGE);
+				return ;
+			}
+			model.setValueAt(String.valueOf(newamount),selection, 5);
+			AccountEntry entry = new AccountEntry(-deposit,"withdraw","","",TransactionType.WITHDRAW);
+			currentAccount.addEntry(entry);
 		}
 		
 		

@@ -1,8 +1,13 @@
 package ui.ccard;
 
+import banking.data.BankingAccountDAO;
+import creditcard.data.CreditAccountDAO;
 import framework.TransactionRecordsWindow;
+import framework.data.AccountDAO;
+import framework.domain.Account;
 
 import java.awt.BorderLayout;
+import java.util.Collection;
 
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -27,6 +32,9 @@ public class CardFrm extends javax.swing.JFrame
     private Object rowdata[];
 
 	private String accountNumber;
+
+	private AccountDAO dao = new CreditAccountDAO();
+	private Collection<Account> daoAccounts =  dao.getAccounts();
     
 	public CardFrm()
 	{
@@ -130,7 +138,7 @@ public class CardFrm extends javax.swing.JFrame
 	javax.swing.JButton JButton_Withdraw = new javax.swing.JButton();
 	javax.swing.JButton JButton_Exit = new javax.swing.JButton();
 
-
+	Account currentAccount;
 	void exitApplication()
 	{
 		try {
@@ -241,8 +249,10 @@ public class CardFrm extends javax.swing.JFrame
 //		JDialogGenBill billFrm = new JDialogGenBill();
 //		billFrm.setBounds(450, 20, 400, 350);
 //		billFrm.show();
-
-		TransactionRecordsWindow recordsWindow = new TransactionRecordsWindow(accountNumber);
+		int selectedRow = JTable1.getSelectedRow();
+		String accountNumber = (String) model.getValueAt(selectedRow, 0);
+		currentAccount = dao.loadAccount(accountNumber);
+		TransactionRecordsWindow recordsWindow = new TransactionRecordsWindow(dao, currentAccount);
 		// Open the transaction records window for the selected account
 	    
 	}

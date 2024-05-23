@@ -1,6 +1,7 @@
 package framework;
 
 import creditcard.data.CreditAccountDAO;
+import framework.data.AccountDAO;
 import framework.domain.Account;
 import framework.domain.AccountEntry;
 
@@ -16,14 +17,16 @@ import java.util.Date;
 
 public class TransactionRecordsWindow extends JFrame {
 
-    private CreditAccountDAO creditAccountDAO = new CreditAccountDAO();
+    private AccountDAO accountDAO ;
 
-    public TransactionRecordsWindow(String accountNumber) {
+    public TransactionRecordsWindow(AccountDAO accountDAO,Account currentAccount) {
+        this.accountDAO = accountDAO;
+        String accountNumber = currentAccount.getAccountNumber();
         setTitle("Transaction Records for Account: " + accountNumber);
         setSize(800, 600);
 
         // Assuming you have a method to retrieve transaction records based on the account name
-        DefaultTableModel transactionModel = getTransactionRecords(accountNumber);
+        DefaultTableModel transactionModel = getTransactionRecords(currentAccount);
         JTable transactionTable = new JTable(transactionModel) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -39,22 +42,16 @@ public class TransactionRecordsWindow extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    private DefaultTableModel getTransactionRecords(String accountNumber) {
+    private DefaultTableModel getTransactionRecords(Account account) {
         // Implement this method to retrieve transaction records based on the account name
         // This could involve querying a database or accessing some data source
         // For demonstration purposes, let's assume a simple DefaultTableModel
 
         // according to account number , get all transaction records.
-        Account account = creditAccountDAO.loadAccount(accountNumber);
-        ArrayList<AccountEntry> accountEntries = new ArrayList<>();
-        if(account != null){
-            accountEntries = (ArrayList)account.getEntryList();
-        }
-        //add some data for demo use
-        addSomeData(accountEntries);
-
+        ArrayList<AccountEntry> accountEntries = (ArrayList)account.getEntryList();
         Object[][] data = new Object[accountEntries.size()][5]; // Assuming there are 5 columns
         // Populate the array with data from the ArrayList
+
         for (int i = 0; i < accountEntries.size(); i++) {
             AccountEntry entry = accountEntries.get(i);
             data[i][0] = entry.getDate();
@@ -63,6 +60,8 @@ public class TransactionRecordsWindow extends JFrame {
             data[i][3] = entry.getFromAccountNumber();
             data[i][4] = entry.getFromPersonName();
         }
+
+
 
         // Define column names
         String[] columnNames = {"Date", "Amount", "Description", "From Account Number", "From Person Name"};
