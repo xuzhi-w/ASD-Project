@@ -1,6 +1,8 @@
 package framework;
 
+import banking.data.BankingAccountDAO;
 import creditcard.data.CreditAccountDAO;
+import creditcard.domain.CreditCardAccount;
 import framework.data.AccountDAO;
 import framework.domain.Account;
 import framework.domain.AccountEntry;
@@ -26,7 +28,12 @@ public class TransactionRecordsWindow extends JFrame {
         setSize(800, 600);
 
         // Assuming you have a method to retrieve transaction records based on the account name
-        DefaultTableModel transactionModel = getTransactionRecords(currentAccount);
+        DefaultTableModel transactionModel=new DefaultTableModel();
+        if(accountDAO instanceof BankingAccountDAO){
+             transactionModel = getTransactionRecords(currentAccount);
+        }else if (accountDAO instanceof CreditAccountDAO){
+            transactionModel = getMonthlyReport((CreditCardAccount) currentAccount);
+        }
         JTable transactionTable = new JTable(transactionModel) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -60,9 +67,6 @@ public class TransactionRecordsWindow extends JFrame {
             data[i][3] = entry.getFromAccountNumber();
             data[i][4] = entry.getFromPersonName();
         }
-
-
-
         // Define column names
         String[] columnNames = {"Date", "Amount", "Description", "From Account Number", "From Person Name"};
 
@@ -71,15 +75,22 @@ public class TransactionRecordsWindow extends JFrame {
         return model;
     }
 
-    public void addSomeData(ArrayList<AccountEntry> accountEntries){
-        //data used for demo
-        // Define the format pattern
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        for(int i = 0; i < 5; i++){
-            Date currentDate = new Date(2024,01,01,10,10,10);
-            // Format the date
-            accountEntries.add(new AccountEntry(currentDate,100 + 100 * i,"A T shirt"+i,"1000"+i,"Tom"+i));
-        }
+
+    public DefaultTableModel getMonthlyReport(CreditCardAccount account){
+        Object[][] data = new Object[5][2];
+        String[] columnNames = {"Item","Value"};
+        data[0][0]="previous balance";
+        data[0][1]=account.getPreviousBalance();
+        data[1][0]="total charges";
+        data[1][1]=account.getTotalCharges2();
+        data[2][0]="total credits";
+        data[2][1]=account.getTotalCredits();
+        data[3][0]="new balance";
+        data[3][1]=account.getNewBalance();
+        data[4][0]="total due";
+        data[4][1]=account.getTotalDue2();
+        DefaultTableModel model = new DefaultTableModel(data, columnNames);
+        return model;
     }
 
 }

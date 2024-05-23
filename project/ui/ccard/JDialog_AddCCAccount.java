@@ -143,8 +143,6 @@ public class JDialog_AddCCAccount extends javax.swing.JDialog
 				JRadioButtonSav_mouseClicked(event);
 			else if (object == JRadioButton_Bronze)
 				JRadioButtonBronze_mouseClicked(event);
-			
-			
 		}
 	}
 

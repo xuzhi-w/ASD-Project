@@ -1,12 +1,15 @@
 package ui.ccard;
 
 import banking.data.BankingAccountDAO;
+import banking.domain.PersonalBankAccount;
 import creditcard.data.CreditAccountDAO;
+import creditcard.domain.CreditCardAccount;
 import framework.TransactionRecordsWindow;
 import framework.data.AccountDAO;
-import framework.domain.Account;
+import framework.domain.*;
 
 import java.awt.BorderLayout;
+import java.time.LocalDate;
 import java.util.Collection;
 
 import javax.swing.JOptionPane;
@@ -23,7 +26,7 @@ public class CardFrm extends javax.swing.JFrame
     /****
      * init variables in the object
      ****/
-    String clientName,street,city, zip, state,accountType,amountDeposit,expdate, ccnumber;
+    String clientName,street,city, zip, state,accountType,amountDeposit,expdate, ccnumber,email;
     boolean newaccount;
     private DefaultTableModel model;
     private JTable JTable1;
@@ -54,14 +57,16 @@ public class CardFrm extends javax.swing.JFrame
 		/Deposit, Withdraw and Exit from the system
 		*/
         JScrollPane1 = new JScrollPane();
-        model = new DefaultTableModel();
-        JTable1 = new JTable(model);
-        model.addColumn("Name");
-        model.addColumn("CC number");
-        model.addColumn("Exp date");
-        model.addColumn("Type");
-        model.addColumn("Balance");
-        rowdata = new Object[7];
+		Object[][] data = addSomeData();
+//        model.addColumn("Name");
+//        model.addColumn("CC number");
+//        model.addColumn("Exp date");
+//        model.addColumn("Type");
+//        model.addColumn("Balance");
+		String[] columns = new String[]{"Name","CC number","Exp date","Type","Balance"};
+		model = new DefaultTableModel(data,columns);
+		JTable1 = new JTable(model);
+		rowdata = new Object[7];
         newaccount=false;
         
         
@@ -71,10 +76,10 @@ public class CardFrm extends javax.swing.JFrame
         JTable1.setBounds(0, 0, 420, 0);
 //        rowdata = new Object[8];
 		
-		JButton_NewCCAccount.setText("Add Credit-card account");
+		JButton_NewCCAccount.setText("Add Credit-card Account");
 		JPanel1.add(JButton_NewCCAccount);
 		JButton_NewCCAccount.setBounds(24,20,192,33);
-		JButton_GenBill.setText("Generate Monthly bills");
+		JButton_GenBill.setText("Generate Monthly Bills");
 		JButton_GenBill.setActionCommand("jbutton");
 		JPanel1.add(JButton_GenBill);
 		JButton_GenBill.setBounds(240,20,192,33);
@@ -99,10 +104,24 @@ public class CardFrm extends javax.swing.JFrame
 		JButton_GenBill.addActionListener(lSymAction);
 		JButton_Deposit.addActionListener(lSymAction);
 		JButton_Withdraw.addActionListener(lSymAction);
-		
+		setLocationRelativeTo(null);
 	}
 
-	
+	private Object[][] addSomeData() {
+		Object[][] data = new Object[1][5];
+		data[0][0] = "John Doe";
+		data[0][1] = "1001";
+		data[0][2] = "2034-01-01";
+		data[0][3] = "Bronze";
+		data[0][4] = "0.00";
+		Address address = new Address("1000N 4Th ST","Fairfield","IA","52556");
+		Customer customer = new Customer("John Doe",address,"johndoe@gmail.com", LocalDate.of(1991,3,23));
+		Account account = new CreditCardAccount("1001",0.00,customer,"Gold");
+		dao.saveAccount(account);
+		// put some entries to these accounts
+		return data;
+	}
+
 	/*****************************************************
 	 * The entry point for this application.
 	 * Sets the Look and Feel to the System Look and Feel.
@@ -239,9 +258,11 @@ public class CardFrm extends javax.swing.JFrame
             JTable1.getSelectionModel().setAnchorSelectionIndex(-1);
             newaccount=false;
         }
-
-       
-        
+		Address address = new Address(street,city,state,zip);
+		//String accountnr, clientName,street,city,zip,state,accountType,clientType,amountDeposit;
+		Customer customer = new Customer(clientName,address,email, null);
+		Account account = new CreditCardAccount(ccnumber,0.00,customer,accountType);
+		dao.saveAccount(account);
     }
 
 	void JButtonGenerateBill_actionPerformed(java.awt.event.ActionEvent event)
@@ -250,57 +271,68 @@ public class CardFrm extends javax.swing.JFrame
 //		billFrm.setBounds(450, 20, 400, 350);
 //		billFrm.show();
 		int selectedRow = JTable1.getSelectedRow();
-		String accountNumber = (String) model.getValueAt(selectedRow, 0);
+		String accountNumber = (String) model.getValueAt(selectedRow, 1);
 		currentAccount = dao.loadAccount(accountNumber);
 		TransactionRecordsWindow recordsWindow = new TransactionRecordsWindow(dao, currentAccount);
 		// Open the transaction records window for the selected account
 	    
 	}
 
+	/**
+	 * When deposit, the balance number goes down
+	 * @param event
+	 */
 	void JButtonDeposit_actionPerformed(java.awt.event.ActionEvent event)
 	{
 	    // get selected name
         int selection = JTable1.getSelectionModel().getMinSelectionIndex();
         if (selection >=0){
             String name = (String)model.getValueAt(selection, 0);
-    	    
+			String accountNumber = (String) model.getValueAt(selection, 1);
+			currentAccount = dao.loadAccount(accountNumber);
 		    //Show the dialog for adding deposit amount for the current mane
 		    JDialog_Deposit dep = new JDialog_Deposit(thisframe,name);
-		    dep.setBounds(430, 15, 275, 140);
+		    dep.setBounds(430, 15, 275, 160);
 		    dep.show();
     		
 		    // compute new amount
-            long deposit = Long.parseLong(amountDeposit);
+            double deposit = Double.parseDouble(amountDeposit);
             String samount = (String)model.getValueAt(selection, 4);
-            long currentamount = Long.parseLong(samount);
-		    long newamount=currentamount+deposit;
+			double currentamount = Double.parseDouble(samount);
+			double newamount=currentamount-deposit;
 		    model.setValueAt(String.valueOf(newamount),selection, 4);
+			AccountEntry entry = new AccountEntry(-deposit,"deposit","","",TransactionType.DEPOSIT);
+			currentAccount.addEntry(entry);
 		}
-		
+
 		
 	}
 
+	/**
+	 * To credit card , withdraw has the same meaning with charge,
+	 * thus you balance number goes up.
+	 */
 	void JButtonWithdraw_actionPerformed(java.awt.event.ActionEvent event)
 	{
 	    // get selected name
         int selection = JTable1.getSelectionModel().getMinSelectionIndex();
         if (selection >=0){
             String name = (String)model.getValueAt(selection, 0);
-
+			String accountNumber = (String) model.getValueAt(selection, 1);
+			currentAccount = dao.loadAccount(accountNumber);
 		    //Show the dialog for adding withdraw amount for the current mane
 		    JDialog_Withdraw wd = new JDialog_Withdraw(thisframe,name);
-		    wd.setBounds(430, 15, 275, 140);
+		    wd.setBounds(430, 15, 275, 160);
 		    wd.show();
     		
 		    // compute new amount
-            long deposit = Long.parseLong(amountDeposit);
+			double deposit = Double.parseDouble(amountDeposit);
             String samount = (String)model.getValueAt(selection, 4);
-            long currentamount = Long.parseLong(samount);
-		    long newamount=currentamount-deposit;
+			double currentamount = Double.parseDouble(samount);
+			double newamount=currentamount+deposit;
 		    model.setValueAt(String.valueOf(newamount),selection, 4);
-		    if (newamount <0){
-		       JOptionPane.showMessageDialog(JButton_Withdraw, " "+name+" Your balance is negative: $"+String.valueOf(newamount)+" !","Warning: negative balance",JOptionPane.WARNING_MESSAGE);
-		    }
+			AccountEntry entry = new AccountEntry(deposit,"withdraw","","",TransactionType.WITHDRAW);
+			currentAccount.addEntry(entry);
 		}
 		
 		
