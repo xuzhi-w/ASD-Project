@@ -247,6 +247,7 @@ public class BankFrm extends javax.swing.JFrame
 		
 		JDialog_AddPAcc pac = new JDialog_AddPAcc(myframe);
 		pac.setBounds(450, 20, 300, 330);
+		pac.setLocationRelativeTo(null);
 		pac.show();
 		bankingApplication.getAccountService().createAccount("Personal", accountnr,
 				0, clientName, street, city, state, zip, email,
@@ -290,6 +291,7 @@ public class BankFrm extends javax.swing.JFrame
 		
 		JDialog_AddCompAcc pac = new JDialog_AddCompAcc(myframe);
 		pac.setBounds(450, 20, 300, 330);
+		pac.setLocationRelativeTo(null);
 		pac.show();
 
 		bankingApplication.getAccountService().createAccount("Company", accountnr,
@@ -319,7 +321,8 @@ public class BankFrm extends javax.swing.JFrame
 			currentAccount = bankDao.loadAccount(accnr);
 		    //Show the dialog for adding deposit amount for the current mane
 		    JDialog_Deposit dep = new JDialog_Deposit(myframe,accnr);
-		    dep.setBounds(430, 15, 275, 140);
+		    dep.setBounds(430, 15, 275, 160);
+			dep.setLocationRelativeTo(null);
 		    dep.show();
             double deposit = Double.valueOf(amountDeposit);
 			bankingApplication.getAccountService().deposit(accnr, deposit);
@@ -338,7 +341,8 @@ public class BankFrm extends javax.swing.JFrame
 			currentAccount = bankDao.loadAccount(accnr);
 		    //Show the dialog for adding withdraw amount for the current mane
 		    JDialog_Withdraw wd = new JDialog_Withdraw(myframe,accnr);
-		    wd.setBounds(430, 15, 275, 140);
+		    wd.setBounds(430, 15, 275, 160);
+			wd.setLocationRelativeTo(null);
 		    wd.show();
 
             double amount = Double.valueOf(amountDeposit);

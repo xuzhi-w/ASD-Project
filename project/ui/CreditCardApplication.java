@@ -12,11 +12,18 @@ import ui.ccard.TransactionRecordsWindow;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CreditCardApplication {
 
     private AccountService accountService;
+
+    public AccountService getAccountService() {
+        return accountService;
+    }
+
     public CreditCardApplication() {
         this.accountService = new CreditCardService(new AccountDAOImpl());
     }
@@ -39,12 +46,14 @@ public class CreditCardApplication {
         return accountService.getAllAccounts();
     }
     public List<AccountEntry> getAccountEntries(String accountNumber){
-        return accountService.getAccount(accountNumber).getEntryList().stream().toList();
+        return accountService.getAccount(accountNumber).getEntryList().stream().sorted((e1,e2) -> e1.getDate()
+                .compareTo(e2.getDate())).collect(Collectors.toList());
     }
     public TransactionRecordsWindow createTransactionRecordsWindow(String accountNumber){
         CreditCardAccount account = (CreditCardAccount)getAccount(accountNumber);
-        return new TransactionRecordsWindow(accountNumber, getAccountEntries(accountNumber), account.getAccountBalance(),
-                account.getTotalCharges(), account.getTotalCredit(), account.calculateCurrentBalance(),
+        account.generateReport();
+        return new TransactionRecordsWindow(accountNumber, getAccountEntries(accountNumber), account.getPreviousBalance(),
+                account.getTotalCharges(), account.getTotalCredits(), account.getNewBalance(),
                 account.getTotalDue());
     }
 }

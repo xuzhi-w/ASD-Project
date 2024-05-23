@@ -9,7 +9,9 @@ import ui.CreditCardApplication;
 
 import java.awt.BorderLayout;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -37,8 +39,9 @@ public class CardFrm extends javax.swing.JFrame
 
 	private String accountNumber;
 
-	private AccountDAO dao = new CreditAccountDAO();
-	private Collection<Account> daoAccounts =  dao.getAccounts();
+//
+//	private AccountDAO dao = new CreditAccountDAO();
+//	private Collection<Account> daoAccounts =  dao.getAccounts();
     
 	public CardFrm()
 	{
@@ -228,8 +231,8 @@ public class CardFrm extends javax.swing.JFrame
 		
 		JDialog_AddCCAccount ccac = new JDialog_AddCCAccount(thisframe);
 		ccac.setBounds(450, 20, 300, 380);
+		ccac.setLocationRelativeTo(null);
 		ccac.show();
-
 		creditCardApplication.createAccount("", ccnumber, 1000, clientName, street, city,
 				state, zip, email, LocalDate.of(2020, 4, 7), accountType, 0);
 		System.out.println(ccnumber + "Account number");
@@ -249,14 +252,30 @@ public class CardFrm extends javax.swing.JFrame
 
 	void JButtonGenerateBill_actionPerformed(java.awt.event.ActionEvent event)
 	{
-
 		int selection = JTable1.getSelectionModel().getMinSelectionIndex();
 		if(selection != -1){
 			String accountNumber = (String)model.getValueAt(selection, 1);
+
+			addSomeData(accountNumber);
 			TransactionRecordsWindow recordsWindow = creditCardApplication.
 					createTransactionRecordsWindow(accountNumber);
 		}
 	}
+
+	private void addSomeData(String accountNumber) {
+		AccountEntry accountEntry = new AccountEntry(new Date(124,Calendar.APRIL,1),-100,"pay back some debt","","",TransactionType.DEPOSIT);
+		AccountEntry accountEntry2 = new AccountEntry(new Date(124,Calendar.APRIL,1),200,"buy a gift","","",TransactionType.WITHDRAW);
+		AccountEntry accountEntry3= new AccountEntry(new Date(124,Calendar.APRIL,1),300,"buy some food","","",TransactionType.WITHDRAW);
+		AccountEntry accountEntry4 = new AccountEntry(new Date(124, Calendar.MAY,1),400,"buy some stuff","","",TransactionType.WITHDRAW);
+		AccountEntry accountEntry5 = new AccountEntry(new Date(124,Calendar.MAY,22),500,"buy some stuff","","",TransactionType.WITHDRAW);
+		Account account = creditCardApplication.getAccountService().getAccount(accountNumber);
+		account.addEntry(accountEntry);
+		account.addEntry(accountEntry2);
+		account.addEntry(accountEntry3);
+		account.addEntry(accountEntry4);
+		account.addEntry(accountEntry5);
+	}
+
 
 	/**
 	 * When deposit, the balance number goes down
@@ -271,9 +290,9 @@ public class CardFrm extends javax.swing.JFrame
     	    
 		    //Show the dialog for adding deposit amount for the current mane
 		    JDialog_Deposit dep = new JDialog_Deposit(thisframe,accountNumber);
-		    dep.setBounds(430, 15, 275, 140);
-		    dep.show();
-    		
+		    dep.setBounds(430, 15, 275, 160);
+			dep.setLocationRelativeTo(null);
+			dep.show();
 		    // compute new amount
             double amount = Double.valueOf(amountDeposit);
 			creditCardApplication.deposit(accountNumber, amount);
@@ -296,7 +315,8 @@ public class CardFrm extends javax.swing.JFrame
 
 		    //Show the dialog for adding withdraw amount for the current mane
 		    JDialog_Withdraw wd = new JDialog_Withdraw(thisframe,accountNumber);
-		    wd.setBounds(430, 15, 275, 140);
+		    wd.setBounds(430, 15, 275, 160);
+			wd.setLocationRelativeTo(null);
 		    wd.show();
     		
 		    // compute new amount

@@ -3,18 +3,19 @@ package ui.ccard;
 import creditcard.data.CreditAccountDAO;
 import framework.domain.Account;
 import framework.domain.AccountEntry;
+import ui.CreditCardApplication;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class TransactionRecordsWindow extends JFrame {
 
-    private CreditAccountDAO creditAccountDAO = new CreditAccountDAO();
-
+    private CreditCardApplication application = new CreditCardApplication();
     private List<AccountEntry> entryList;
     private double previousBalance;
     private double totalCharge;
@@ -39,9 +40,9 @@ public class TransactionRecordsWindow extends JFrame {
         JTable transactionTable = new JTable(transactionModel);
         JScrollPane scrollPane = new JScrollPane(transactionTable);
         add(scrollPane, BorderLayout.CENTER);
-        JLabel totalTransactionsLabel = new JLabel("Previous balance: " + previousBalance
-        + " Total charges: " + totalCharge +" Total credit: " + totalCredit +
-                " " + "new balance: " + newBalance + " Total due: " + totalDue);
+        JLabel totalTransactionsLabel = new JLabel("       Previous balance: $" + previousBalance
+        + "        Total charges: $" + totalCharge +"        Total credit: $" + totalCredit +
+                " " + "        new balance: $" + newBalance + "        Total due: $" + totalDue);
         add(totalTransactionsLabel, BorderLayout.SOUTH);
 
 
@@ -55,28 +56,26 @@ public class TransactionRecordsWindow extends JFrame {
         // For demonstration purposes, let's assume a simple DefaultTableModel
 
         // according to account number , get all transaction records.
-        Account account = creditAccountDAO.loadAccount(accountNumber);
+        Account account = application.getAccount(accountNumber);
         ArrayList<AccountEntry> accountEntries = new ArrayList<>();
         if(account != null){
             accountEntries = (ArrayList)account.getEntryList();
         }
-        //data used for demo
-        accountEntries.add(new AccountEntry(new Date(2024,01,01),100.00,"a T shirt","10001","Tom"));
-        accountEntries.add(new AccountEntry(new Date(2024,01,02),200.00,"a T shirt2","10001","Tom"));
-        accountEntries.add(new AccountEntry(new Date(2024,01,03),300.00,"a T shirt3","10001","Tom"));
-        Object[][] data = new Object[entryList.size()][5]; // Assuming there are 5 columns
+        Object[][] data = new Object[entryList.size()][6]; // Assuming there are 5 columns
+
         // Populate the array with data from the ArrayList
         for (int i=0; i < entryList.size(); i++) {
             AccountEntry entry = entryList.get(i);
             data[i][0] = entry.getDate();
-            data[i][1] = entry.getAmount();
+            data[i][1] = "$ "+entry.getAmount();
             data[i][2] = entry.getDescription();
             data[i][3] = entry.getFromAccountNumber();
             data[i][4] = entry.getFromPersonName();
+            data[i][5] = entry.getTransactionType();
         }
 
         // Define column names
-        String[] columnNames = {"Date", "Amount", "Description", "From Account Number", "From Person Name"};
+        String[] columnNames = {"Date", "Amount", "Description", "From Account Number", "From Person Name","Credit/Charged"};
 
         // Create the DefaultTableModel with the data and column names
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
