@@ -15,7 +15,6 @@ import java.util.Collection;
 
 public class BankAccountService extends AccountServiceImpl {
 
-    private AccountFactory accountFactory;
     public BankAccountService(AccountDAO accountDAO) {
         super(accountDAO, new BankAccountCreater());
     }
@@ -23,8 +22,10 @@ public class BankAccountService extends AccountServiceImpl {
 
     @Override
     public Account createAccount(String accountNumber, double balance, String name, String email, LocalDate dateOfBirth, String street, String city, String state, String zip, AccountTypeEnum accountType, int numberOfEmployees, BankAccountTypeEnum bankAccountTypeEnum) {
-        return accountFactory.createAccount(accountNumber,balance,name,email,dateOfBirth,street,city,
+        Account account = getAccountFactory().createAccount(accountNumber,balance,name,email,dateOfBirth,street,city,
                 state,zip,accountType,numberOfEmployees,bankAccountTypeEnum);
+        getAccountDAO().saveAccount(account);
+        return account;
     }
 
 }

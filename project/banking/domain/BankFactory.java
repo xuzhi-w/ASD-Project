@@ -8,7 +8,7 @@ public abstract class BankFactory implements AccountFactory {
 
     AccountType checkingAccount = new CheckingAccount();
     AccountType savingAccount = new SavingAccount();
-    BankAccountCreater bankAccountCreater = new BankAccountCreater();
+//    BankAccountCreater bankAccountCreater = new BankAccountCreater();
 
     @Override
     public Account createAccount(String accountNumber, double balance, String name, String email,
@@ -18,7 +18,7 @@ public abstract class BankFactory implements AccountFactory {
 
         Address address = new Address(street, city, state, zip);
         Customer customer = new Customer(accountNumber,address,email,dateOfBirth);
-        Account account = bankAccountCreater.createBankAccount(accountNumber,balance,customer,numberOfEmployees,bankAccountTypeEnum);
+        Account account = createBankAccount(accountNumber,balance,customer,numberOfEmployees,bankAccountTypeEnum);
         setBankAccountType(account, accountType);
 
         return account;

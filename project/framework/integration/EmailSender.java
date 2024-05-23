@@ -11,7 +11,7 @@ public class EmailSender implements Observer {
     }
     public static EmailSender getInstance() {
         if (Objects.isNull(instance)) {
-            synchronized (EmailSenderSingleton.class) {
+            synchronized (EmailSender.class) {
                 if (Objects.isNull(instance)) {
                     instance = new EmailSender();
                 }

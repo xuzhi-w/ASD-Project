@@ -2,5 +2,6 @@ package banking.domain;
 
 public enum BankAccountTypeEnum {
     CAMPANY,
-    PERSONAL
+    PERSONAL,
+    CREDITCARD
 }
