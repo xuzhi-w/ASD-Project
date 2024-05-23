@@ -1,15 +1,14 @@
 package ui.bank;
 
 
-<<<<<<< HEAD
+
 import framework.service.AccountService;
-=======
 import framework.domain.Account;
 import framework.domain.AccountTypeEnum;
 import framework.domain.Address;
 import framework.domain.Customer;
 import ui.BankingApplication;
->>>>>>> 2f64cf10a408bd9e502d09c7270ae92626199ef5
+
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -389,6 +388,7 @@ public class BankFrm extends javax.swing.JFrame
 	{
 		  JOptionPane.showMessageDialog(JButton_Addinterest, "Add interest to all accounts","Add interest to all accounts",JOptionPane.WARNING_MESSAGE);
 		  bankingApplication.getAccountService().addInterest();
+
 	    
 	}
 }

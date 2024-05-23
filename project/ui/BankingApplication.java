@@ -18,8 +18,4 @@ public class BankingApplication {
         this.accountService = accountService;
     }
 
-    public static void main(String[] args) {
-
-    }
-
 }
