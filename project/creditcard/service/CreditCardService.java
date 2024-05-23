@@ -24,6 +24,7 @@ public class CreditCardService extends AccountServiceImpl {
                                  String name, String street, String city, String state, String zip, String email, LocalDate dateOfBirth, AccountTypeEnum accountType, int numberOfEmployees) {
         Account account = getAccountFactory().createCreditCardAccount(accountNumber,balance, name,street, city, state, zip, email, dateOfBirth,accountType);
         getAccountDAO().saveAccount(account);
+        System.out.println(account);
         return account;
     }
 

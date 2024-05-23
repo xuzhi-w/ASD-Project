@@ -25,7 +25,7 @@ public class CreditCardAccount extends Account {
 
     @Override
     public void deposit(double amount) {
-        AccountEntry entry = new AccountEntry(amount, "Account credited", "", "", TransactionType.DEPOSIT);
+        AccountEntry entry = new AccountEntry(-amount, "Account credited", "", "", TransactionType.DEPOSIT);
         addEntry(entry);
     }
 
@@ -36,13 +36,13 @@ public class CreditCardAccount extends Account {
         System.out.println("Previous balance: "+ getAccountBalance());
         System.out.println("Total charges: "+ getTotalCharges());
         System.out.println("Total credit: "+ getTotalCredit());
-        updateBalance();
+        calculateCurrentBalance();
         System.out.println("New balance: "+ getAccountBalance());
         System.out.println("Total Due: "+ getTotalDue());
 
     }
 
-    private double getTotalCharges(){
+    public double getTotalCharges(){
         double balance = 0;
         for (AccountEntry entry : getEntryList()) {
             if(entry.getTransactionType()==TransactionType.WITHDRAW)
@@ -50,24 +50,21 @@ public class CreditCardAccount extends Account {
         }
         return balance;
     }
-    private double getTotalCredit(){
+    public double getTotalCredit(){
         double balance = 0;
         for (AccountEntry entry : getEntryList()) {
             if(entry.getTransactionType()==TransactionType.DEPOSIT)
                 balance += entry.getAmount();
         }
-        return balance;
+        return -1*balance;
     }
-    private double getTotalDue(){
+    public double getTotalDue(){
         return getAccountType().getMinimumPayment() * getAccountBalance();
     }
-    private void updateBalance() {
+    public double calculateCurrentBalance() {
         double total =  getAccountBalance() - getTotalCredit() + getTotalCharges() +
                 getAccountType().getMonthlyInterest()*(getAccountBalance() - getTotalCredit());
-        System.out.println(total);
         setBalance(total);
+        return total;
     }
-
-
-
 }

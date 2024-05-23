@@ -8,14 +8,29 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 public class TransactionRecordsWindow extends JFrame {
 
     private CreditAccountDAO creditAccountDAO = new CreditAccountDAO();
 
-    public TransactionRecordsWindow(String accountNumber) {
+    private List<AccountEntry> entryList;
+    private double previousBalance;
+    private double totalCharge;
+    private double totalCredit;
+    private double newBalance;
+    private double totalDue;
+
+    public TransactionRecordsWindow(String accountNumber, List<AccountEntry> entryList, double previousBalance,
+                                    double totalCharge, double totalCredit, double newBalance,
+                                    double totalDue) {
+        this.entryList = entryList;
+        this.previousBalance = previousBalance;
+        this.totalCharge = totalCharge;
+        this.totalCredit = totalCredit;
+        this.newBalance = newBalance;
+        this.totalDue = totalDue;
         setTitle("Transaction Records for Account: " + accountNumber);
         setSize(800, 600);
 
@@ -23,8 +38,12 @@ public class TransactionRecordsWindow extends JFrame {
         DefaultTableModel transactionModel = getTransactionRecords(accountNumber);
         JTable transactionTable = new JTable(transactionModel);
         JScrollPane scrollPane = new JScrollPane(transactionTable);
-
         add(scrollPane, BorderLayout.CENTER);
+        JLabel totalTransactionsLabel = new JLabel("Previous balance: " + previousBalance
+        + " Total charges: " + totalCharge +" Total credit: " + totalCredit +
+                " " + "new balance: " + newBalance + " Total due: " + totalDue);
+        add(totalTransactionsLabel, BorderLayout.SOUTH);
+
 
         setVisible(true);
     }
@@ -44,10 +63,10 @@ public class TransactionRecordsWindow extends JFrame {
         accountEntries.add(new AccountEntry(new Date(2024,01,01),100.00,"a T shirt","10001","Tom"));
         accountEntries.add(new AccountEntry(new Date(2024,01,02),200.00,"a T shirt2","10001","Tom"));
         accountEntries.add(new AccountEntry(new Date(2024,01,03),300.00,"a T shirt3","10001","Tom"));
-        Object[][] data = new Object[accountEntries.size()][5]; // Assuming there are 5 columns
+        Object[][] data = new Object[entryList.size()][5]; // Assuming there are 5 columns
         // Populate the array with data from the ArrayList
-        for (int i = 0; i < accountEntries.size(); i++) {
-            AccountEntry entry = accountEntries.get(i);
+        for (int i=0; i < entryList.size(); i++) {
+            AccountEntry entry = entryList.get(i);
             data[i][0] = entry.getDate();
             data[i][1] = entry.getAmount();
             data[i][2] = entry.getDescription();
@@ -62,4 +81,5 @@ public class TransactionRecordsWindow extends JFrame {
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
         return model;
     }
+
 }
