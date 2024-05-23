@@ -1,6 +1,7 @@
 package ui.bank;
 
 import banking.data.BankingAccountDAO;
+import banking.domain.BankAccountTypeEnum;
 import framework.data.AccountDAO;
 import framework.service.AccountService;
 import framework.domain.Account;
@@ -249,9 +250,9 @@ public class BankFrm extends javax.swing.JFrame
 		pac.setBounds(450, 20, 300, 330);
 		pac.setLocationRelativeTo(null);
 		pac.show();
-		bankingApplication.getAccountService().createAccount("Personal", accountnr,
-				0, clientName, street, city, state, zip, email,
-				LocalDate.of(2020, 4, 7), accountType, 0);
+		bankingApplication.createAccount( accountnr,
+				0, clientName, email, LocalDate.of(2020, 4, 7),
+				street,city,state,zip,accountType, 0, BankAccountTypeEnum.CAMPANY);
 		if (newaccount){
             // add row to table
             rowdata[0] = accountnr;
@@ -294,9 +295,9 @@ public class BankFrm extends javax.swing.JFrame
 		pac.setLocationRelativeTo(null);
 		pac.show();
 
-		bankingApplication.getAccountService().createAccount("Company", accountnr,
-				0, clientName, street, city, state, zip, email,
-				LocalDate.of(2020, 4, 7), accountType, 0);
+		bankingApplication.createAccount( accountnr,
+				0, clientName, email, LocalDate.of(2020, 4, 7),
+				street,city,state,zip,accountType, 0, BankAccountTypeEnum.CAMPANY);
 		if (newaccount){
             // add row to table
             rowdata[0] = accountnr;
@@ -318,14 +319,15 @@ public class BankFrm extends javax.swing.JFrame
 		//System.out.println(selection);
         if (selection >=0){
             String accnr = (String)model.getValueAt(selection, 0);
-			currentAccount = bankDao.loadAccount(accnr);
+			//currentAccount = bankDao.loadAccount(accnr);
 		    //Show the dialog for adding deposit amount for the current mane
 		    JDialog_Deposit dep = new JDialog_Deposit(myframe,accnr);
 		    dep.setBounds(430, 15, 275, 160);
 			dep.setLocationRelativeTo(null);
 		    dep.show();
             double deposit = Double.valueOf(amountDeposit);
-			bankingApplication.getAccountService().deposit(accnr, deposit);
+			//System.out.println(accnr);
+			bankingApplication.deposit(accnr, deposit);
 			updateAmount(selection, accnr);
 		}
 		
@@ -346,8 +348,8 @@ public class BankFrm extends javax.swing.JFrame
 		    wd.show();
 
             double amount = Double.valueOf(amountDeposit);
-			bankingApplication.getAccountService().withdraw(accnr, amount);
-			double newamount = bankingApplication.getAccountService().getAccount(accnr).getBalance();
+			bankingApplication.withdraw(accnr, amount);
+			double newamount = bankingApplication.getAccount(accnr).getBalance();
 			updateAmount(selection, accnr);
 		    if (newamount <0){
 				JOptionPane.showMessageDialog(JButton_Withdraw, " Account "+accnr+" : balance is negative: $"+String.valueOf(newamount)+" !"

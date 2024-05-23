@@ -1,35 +1,35 @@
 package creditcard.domain;
 
+import banking.domain.BankAccountTypeEnum;
 import framework.domain.*;
 
 import java.time.LocalDate;
 
 public class CreditCardFactory implements AccountFactory {
-    AccountType bronze = new BronzeAccount();
-    AccountType gold = new GoldAccount();
-    AccountType silver = new SilverAccount();
+
+//    @Override
+//    public Account createAccount(String accountNumber, double balance, Customer customer, String accountType, int numberOfEmployees) {
+//        return new CreadicardAccount(accountNumber,balance,customer);
+//    }
+    BronzeAccount bronzeAccount = new BronzeAccount();
+    GoldAccount goldAccount = new GoldAccount();
+    SilverAccount silverAccount = new SilverAccount();
 
     @Override
-    public Account createPersonalBankAccount(String accountNumber, String name, String street, String city, String state, String zip, String email, LocalDate dateOfBirth, AccountTypeEnum accountType) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Account createCompanyBankAccount(String accountNumber, String name, String street, String city, String state, String zip, String email, LocalDate dateOfBirth, AccountTypeEnum accountType, int numberOfEmployees) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Account createCreditCardAccount(String accountNumber, double balance, String name, String street, String city, String state, String zip, String email, LocalDate dateOfBirth, AccountTypeEnum accountType) {
+    public Account createAccount(String accountNumber, double balance, String name, String email,
+                                 LocalDate dateOfBirth, String street, String city, String state,
+                                 String zip, AccountTypeEnum accountType, int numberOfEmployees,
+                                 BankAccountTypeEnum bankAccountTypeEnum) {
         Address address = new Address(street, city, state, zip);
         Customer customer = new Customer(name, address, email, dateOfBirth);
         Account account = new CreditCardAccount(accountNumber, balance, customer,accountType);
-        if (accountType == AccountTypeEnum.BRONZE)
-            account.setAccountType(bronze);
+        if(accountType == AccountTypeEnum.BRONZE)
+            account.setAccountType(bronzeAccount);
         else if (accountType == AccountTypeEnum.GOLD)
-            account.setAccountType(gold);
+            account.setAccountType(goldAccount);
         else if (accountType == AccountTypeEnum.SILVER)
-            account.setAccountType(silver);
+            account.setAccountType(silverAccount);
         return account;
+
     }
 }

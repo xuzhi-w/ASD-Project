@@ -1,4 +1,5 @@
 package ui.ccard;
+import banking.domain.BankAccountTypeEnum;
 import creditcard.data.CreditAccountDAO;
 import creditcard.domain.CreditCardAccount;
 import framework.data.AccountDAO;
@@ -233,8 +234,14 @@ public class CardFrm extends javax.swing.JFrame
 		ccac.setBounds(450, 20, 300, 380);
 		ccac.setLocationRelativeTo(null);
 		ccac.show();
-		creditCardApplication.createAccount("", ccnumber, 1000, clientName, street, city,
-				state, zip, email, LocalDate.of(2020, 4, 7), accountType, 0);
+		creditCardApplication.createAccount(ccnumber, 1000, clientName,email
+				,LocalDate.of(2020, 4, 7), street, city,
+				state, zip , accountType,0,null);
+
+
+//		creditCardApplication.createAccount( ccnumber,
+//			0, clientName, email, LocalDate.of(2020, 4, 7),
+//			street,city,state,zip,accountType, 0, BankAccountTypeEnum.CREDITCARD);
 		System.out.println(ccnumber + "Account number");
 
 		if (newaccount){

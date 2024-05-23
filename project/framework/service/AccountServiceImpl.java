@@ -19,10 +19,6 @@ public abstract class AccountServiceImpl implements AccountService {
         this.accountFactory = accountFactory;
     }
 
-    @Override
-    public abstract Account createAccount(String bankAccountType, String accountNumber, double balance,
-                                          String name, String street, String city, String state, String zip, String email, LocalDate dateOfBirth, AccountTypeEnum accountType, int numberOfEmployees);
-
 
     @Override
     public Account getAccount(String accountNumber) {

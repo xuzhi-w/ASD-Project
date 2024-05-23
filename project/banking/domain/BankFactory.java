@@ -4,38 +4,27 @@ import framework.domain.*;
 
 import java.time.LocalDate;
 
-public class BankFactory implements AccountFactory {
-    AccountType checkinAccountType = new CheckingAccount();
-    AccountType savingsAccountType = new SavingAccount();
+public abstract class BankFactory implements AccountFactory {
+
+    AccountType checkingAccount = new CheckingAccount();
+    AccountType savingAccount = new SavingAccount();
+//    BankAccountCreater bankAccountCreater = new BankAccountCreater();
 
     @Override
-    public Account createPersonalBankAccount(String accountNumber, String name, String street, String city, String state, String zip, String email, LocalDate dateOfBirth, AccountTypeEnum accountType) {
+    public Account createAccount(String accountNumber, double balance, String name, String email,
+                                 LocalDate dateOfBirth, String street, String city, String state,
+                                 String zip, AccountTypeEnum accountType, int numberOfEmployees,
+                                 BankAccountTypeEnum bankAccountTypeEnum) {
+
         Address address = new Address(street, city, state, zip);
-        Customer customer = new Customer(name, address, email, dateOfBirth);
-        Account account = new PersonalBankAccount(accountNumber, 0, customer);
-        if(accountType == AccountTypeEnum.CHECKING) {
-            account.setAccountType(checkinAccountType);
-        }else if(accountType == AccountTypeEnum.SAVINGS) {
-            account.setAccountType(savingsAccountType);
-        }
+        Customer customer = new Customer(accountNumber,address,email,dateOfBirth);
+        Account account = createBankAccount(accountNumber,balance,customer,numberOfEmployees,bankAccountTypeEnum);
+        setBankAccountType(account, accountType);
+
         return account;
     }
 
-    @Override
-    public Account createCompanyBankAccount(String accountNumber, String name, String street, String city, String state, String zip, String email, LocalDate dateOfBirth, AccountTypeEnum accountType, int numberOfEmployees) {
-        Address address = new Address(street, city, state, zip);
-        Customer customer = new Customer(name, address, email, dateOfBirth);
-        Account account = new CompanyBankAccount(accountNumber, 0, customer, numberOfEmployees);
-        if(accountType == AccountTypeEnum.CHECKING) {
-            account.setAccountType(checkinAccountType);
-        }else if(accountType == AccountTypeEnum.SAVINGS) {
-            account.setAccountType(savingsAccountType);
-        }
-        return account;
-    }
-
-    @Override
-    public Account createCreditCardAccount(String accountNumber, double balance, String name, String street, String city, String state, String zip, String email, LocalDate dateOfBirth, AccountTypeEnum accountType) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    public abstract Account createBankAccount(String accountNumber, double balance, Customer customer,
+                                              int numberOfEmployees, BankAccountTypeEnum bankAccountTypeEnum);
+    public abstract void setBankAccountType(Account account ,AccountTypeEnum accountTypeEnum);
 }

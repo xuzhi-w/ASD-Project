@@ -2,7 +2,23 @@ package framework.integration;
 
 import framework.domain.Customer;
 
+import java.util.Objects;
+
 public class EmailSender implements Observer {
+
+    private static volatile EmailSender instance;
+    private EmailSender() {
+    }
+    public static EmailSender getInstance() {
+        if (Objects.isNull(instance)) {
+            synchronized (EmailSender.class) {
+                if (Objects.isNull(instance)) {
+                    instance = new EmailSender();
+                }
+            }
+        }
+        return instance;
+    }
     @Override
     public void update(String message, Customer customer) {
         System.out.println("Email sent to " + customer.getEmail() + ": " + message);
