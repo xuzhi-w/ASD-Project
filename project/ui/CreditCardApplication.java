@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CreditCardApplication {
+public class CreditCardApplication implements Application{
 
     private AccountService accountService;
 
@@ -27,6 +27,8 @@ public class CreditCardApplication {
     public CreditCardApplication() {
         this.accountService = new CreditCardService(new AccountDAOImpl());
     }
+
+    @Override
     public Account createAccount(String accountNumber, double balance, String name, String email,
                                  LocalDate dateOfBirth, String street, String city, String state,
                                  String zip, AccountTypeEnum accountType, int numberOfEmployees,
@@ -36,25 +38,23 @@ public class CreditCardApplication {
                 state,zip,accountType,numberOfEmployees,bankAccountTypeEnum);
     }
 
-    public Account createAccount(String accountNumber, double balance, String name, String email,
-                                 LocalDate dateOfBirth, String street, String city, String state,
-                                 String zip, AccountTypeEnum accountType, int numberOfEmployees
-                                 ) {
-        return accountService.createAccount(accountNumber,balance,name,email,dateOfBirth,street,city,
-                state,zip,accountType,numberOfEmployees,null);
-    }
+    @Override
     public void deposit(String accountNumber, double amount){
         accountService.deposit(accountNumber, amount);
     }
+    @Override
     public void withdraw(String accountNumber, double amount){
         accountService.withdraw(accountNumber, amount);
     }
+    @Override
     public Account getAccount(String accountNumber){
         return accountService.getAccount(accountNumber);
     }
+    @Override
     public Collection<Account> getAllAccounts(){
         return accountService.getAllAccounts();
     }
+    @Override
     public List<AccountEntry> getAccountEntries(String accountNumber){
         return accountService.getAccount(accountNumber).getEntryList().stream().sorted((e1,e2) -> e1.getDate()
                 .compareTo(e2.getDate())).collect(Collectors.toList());
