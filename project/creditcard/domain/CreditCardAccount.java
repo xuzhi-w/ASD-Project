@@ -1,23 +1,37 @@
 package creditcard.domain;
 
-import framework.domain.Account;
-import framework.domain.AccountEntry;
-import framework.domain.Customer;
-import framework.domain.TransactionType;
+import framework.domain.*;
+import ui.CreditCardApplication;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class CreditCardAccount extends Account {
+    @Override
+    public String toString() {
+        return "CreditCardAccount{" +
+                "type=" + type +
+                ", MP=" + MP +
+                ", MI=" + MI +
+                ", previousBalance=" + previousBalance +
+                ", totalCharges=" + totalCharges +
+                ", totalCredits=" + totalCredits +
+                ", newBalance=" + newBalance +
+                ", totalDue=" + totalDue +
+                '}';
+    }
 
-    private String type;
+    Logger logger =  Logger.getLogger("credit application");
+    private AccountTypeEnum type;
     private double MP;
     private double MI;
-    public String getType() {
+    public AccountTypeEnum getType() {
         return type;
     }
 
@@ -37,7 +51,7 @@ public class CreditCardAccount extends Account {
         return MI;
     }
 
-    public void setType(String type) {
+    public void setType(AccountTypeEnum type) {
         this.type = type;
     }
 
@@ -52,20 +66,21 @@ public class CreditCardAccount extends Account {
      * @param customer
      * @param type Gold Silver Bronze
      */
-    public CreditCardAccount(String accountNumber, double balance, Customer customer, String type) {
+    public CreditCardAccount(String accountNumber, double balance, Customer customer, AccountTypeEnum type) {
         super(accountNumber, balance, customer);
-        this.type = type;
+        setType(type);
 
-        if(type == "Gold"){
+        if(type == AccountTypeEnum.GOLD){
             MI = 0.06;
             MP = 0.10;
-        }else if (type == "Silver"){
+        }else if (type == AccountTypeEnum.SILVER){
             MI = 0.08;
             MP = 0.12;
-        }else if(type == "Bronze"){
+        }else if(type == AccountTypeEnum.BRONZE){
             MI = 0.10;
             MP = 0.14;
         }
+        logger.log(Level.INFO,toString());
     }
 
     @Override
@@ -75,28 +90,29 @@ public class CreditCardAccount extends Account {
         if (amount > 400) {
             notifyObservers("Account charged " + amount, getCustomer());
         }
-
+        logger.log(Level.INFO,toString());
     }
 
     @Override
     public void deposit(double amount) {
         AccountEntry entry = new AccountEntry(-amount, "Account credited", "", "", TransactionType.DEPOSIT);
         addEntry(entry);
+        logger.log(Level.INFO,toString());
     }
 
     private double previousBalance = 0.0;
-    private double totalCharges2 = 0.0;
+    private double totalCharges = 0.0;
     private double totalCredits = 0.0;
     private double newBalance = 0.0;
-    private double totalDue2 = 0.0;
+    private double totalDue = 0.0;
 
 
-    public double getTotalCharges2() {
-        return totalCharges2;
+    public double getTotalCharges() {
+        return totalCharges;
     }
 
-    public double getTotalDue2() {
-        return totalDue2;
+    public double getTotalDue() {
+        return totalDue;
     }
 
     public double getPreviousBalance() {
@@ -127,11 +143,12 @@ public class CreditCardAccount extends Account {
             if(entry.getTransactionType().equals(TransactionType.DEPOSIT)){
                 totalCredits += entry.getAmount();
             }else if(entry.getTransactionType().equals(TransactionType.WITHDRAW)){
-                totalCharges2 += entry.getAmount();
+                totalCharges += entry.getAmount();
             }
         }
-        newBalance = previousBalance + totalCredits + totalCharges2 + MI * (previousBalance+totalCredits);
-        totalDue2 = MP * newBalance;
+        newBalance = previousBalance + totalCredits + totalCharges + MI * (previousBalance+totalCredits);
+        totalDue = Math.ceil(MP * newBalance * 100)/100;
+        logger.log(Level.INFO,"Report generated:" + toString());
     }
 
     public LocalDate convertDateToLocalDate(Date date){
@@ -139,41 +156,4 @@ public class CreditCardAccount extends Account {
         return localDate;
     }
 
-//    @Override
-//    public void generateReport() {
-//        System.out.println("Account number: "+ getAccountNumber());
-//        System.out.println("Previous balance: "+ getAccountBalance());
-//        System.out.println("Total charges: "+ getTotalCharges());
-//        System.out.println("Total credit: "+ getTotalCredit());
-//        calculateCurrentBalance();
-//        System.out.println("New balance: "+ getAccountBalance());
-//        System.out.println("Total Due: "+ getTotalDue());
-//
-//    }
-
-    public double getTotalCharges(){
-        double balance = 0;
-        for (AccountEntry entry : getEntryList()) {
-            if(entry.getTransactionType()==TransactionType.WITHDRAW)
-                balance += entry.getAmount();
-        }
-        return balance;
-    }
-    public double getTotalCredit(){
-        double balance = 0;
-        for (AccountEntry entry : getEntryList()) {
-            if(entry.getTransactionType()==TransactionType.DEPOSIT)
-                balance += entry.getAmount();
-        }
-        return -1*balance;
-    }
-    public double getTotalDue(){
-        return getAccountType().getMinimumPayment() * getAccountBalance();
-    }
-    public double calculateCurrentBalance() {
-        double total =  getAccountBalance() - getTotalCredit() + getTotalCharges() +
-                getAccountType().getMonthlyInterest()*(getAccountBalance() - getTotalCredit());
-        setBalance(total);
-        return total;
-    }
 }

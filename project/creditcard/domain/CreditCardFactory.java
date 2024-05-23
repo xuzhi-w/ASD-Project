@@ -21,9 +21,7 @@ public abstract class CreditCardFactory implements AccountFactory {
         Account account = new CreditCardAccount(accountNumber,balance,customer);
         setAccountype(account,accountType);
         return account;
-
     }
-
     public abstract void setAccountype(Account account, AccountTypeEnum accountTypeEnum);
 
 }

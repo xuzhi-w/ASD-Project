@@ -58,10 +58,11 @@ public class BankingApplication implements Application{
     public Collection<Account> getAllAccounts(){
         return accountService.getAllAccounts();
     }
+
     public TransactionRecordsWindow createTransactionRecordsWindow(String accountNumber){
         CreditCardAccount account = (CreditCardAccount)getAccount(accountNumber);
-        return new TransactionRecordsWindow(accountNumber, getAccountEntries(accountNumber), account.getAccountBalance(),
-                account.getTotalCharges(), account.getTotalCredit(), account.calculateCurrentBalance(),
+        return new TransactionRecordsWindow(accountNumber, getAccountEntries(accountNumber), account.getPreviousBalance(),
+                account.getTotalCharges(), account.getTotalCredits(), account.getNewBalance(),
                 account.getTotalDue());
     }
 
