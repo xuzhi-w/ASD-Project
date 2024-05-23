@@ -73,7 +73,7 @@ public class CreditCardAccount extends Account {
         if(type == AccountTypeEnum.GOLD){
             MI = 0.06;
             MP = 0.10;
-        }else if (type == AccountTypeEnum.GOLD){
+        }else if (type == AccountTypeEnum.SILVER){
             MI = 0.08;
             MP = 0.12;
         }else if(type == AccountTypeEnum.BRONZE){
@@ -90,13 +90,14 @@ public class CreditCardAccount extends Account {
         if (amount > 400) {
             notifyObservers("Account charged " + amount, getCustomer());
         }
-
+        logger.log(Level.INFO,toString());
     }
 
     @Override
     public void deposit(double amount) {
         AccountEntry entry = new AccountEntry(-amount, "Account credited", "", "", TransactionType.DEPOSIT);
         addEntry(entry);
+        logger.log(Level.INFO,toString());
     }
 
     private double previousBalance = 0.0;
@@ -147,6 +148,7 @@ public class CreditCardAccount extends Account {
         }
         newBalance = previousBalance + totalCredits + totalCharges + MI * (previousBalance+totalCredits);
         totalDue = Math.ceil(MP * newBalance * 100)/100;
+        logger.log(Level.INFO,"Report generated:" + toString());
     }
 
     public LocalDate convertDateToLocalDate(Date date){
