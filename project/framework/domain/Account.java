@@ -22,7 +22,7 @@ public abstract class Account implements Subject{
 	public Account(String accountNumber, double balance, Customer customer) {
 		this.accountNumber = accountNumber;
 		this.customer = customer;
-		this.balance = balance;
+		this.balance = 0;
 		this.observers = new ArrayList<>();
 		this.entryList = new ArrayList<>();
 	}
@@ -124,5 +124,15 @@ public abstract class Account implements Subject{
 		}
 	}
 
-
+	@Override
+	public String toString() {
+		return "Account{" +
+				"customer=" + customer +
+				", accountNumber='" + accountNumber + '\'' +
+				", balance=" + balance +
+				", accountType=" + accountType +
+				", entryList=" + entryList +
+				", observers=" + observers +
+				'}';
+	}
 }

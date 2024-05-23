@@ -2,6 +2,7 @@ package framework;
 
 import creditcard.domain.CreditCardAccount;
 import creditcard.domain.GoldAccount;
+import creditcard.domain.SilverAccount;
 import framework.domain.Account;
 import framework.domain.Address;
 import framework.domain.Customer;
@@ -17,6 +18,9 @@ public class Application {
 
 		Account creditcard = new CreditCardAccount("123456",1000, c1);
 		creditcard.setAccountType(new GoldAccount());
+
+		Account creditcard1 = new CreditCardAccount("123457",3000, c1);
+		creditcard.setAccountType(new SilverAccount());
 
 
 		creditcard.withdraw(200);

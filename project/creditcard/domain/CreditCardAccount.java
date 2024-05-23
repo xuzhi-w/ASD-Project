@@ -80,16 +80,25 @@ public class CreditCardAccount extends Account {
 
     @Override
     public void deposit(double amount) {
-        AccountEntry entry = new AccountEntry(amount, "Account credited", "", "", TransactionType.DEPOSIT);
+        AccountEntry entry = new AccountEntry(-amount, "Account credited", "", "", TransactionType.DEPOSIT);
         addEntry(entry);
     }
-
 
     private double previousBalance = 0.0;
     private double totalCharges2 = 0.0;
     private double totalCredits = 0.0;
     private double newBalance = 0.0;
-
+//    @Override
+//    public void generateReport() {
+//        System.out.println("Account number: "+ getAccountNumber());
+//        System.out.println("Previous balance: "+ getAccountBalance());
+//        System.out.println("Total charges: "+ getTotalCharges());
+//        System.out.println("Total credit: "+ getTotalCredit());
+//        calculateCurrentBalance();
+//        System.out.println("New balance: "+ getAccountBalance());
+//        System.out.println("Total Due: "+ getTotalDue());
+//>>>>>>> 7b61b80e6acfc01a7a5a5dd0730dac74c84f8413
+//    }
     public double getTotalCharges2() {
         return totalCharges2;
     }
@@ -139,7 +148,8 @@ public class CreditCardAccount extends Account {
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return localDate;
     }
-    private double getTotalCharges(){
+
+    public double getTotalCharges(){
         double balance = 0;
         for (AccountEntry entry : getEntryList()) {
             if(entry.getTransactionType()==TransactionType.WITHDRAW)
@@ -147,24 +157,21 @@ public class CreditCardAccount extends Account {
         }
         return balance;
     }
-    private double getTotalCredit(){
+    public double getTotalCredit(){
         double balance = 0;
         for (AccountEntry entry : getEntryList()) {
             if(entry.getTransactionType()==TransactionType.DEPOSIT)
                 balance += entry.getAmount();
         }
-        return balance;
+        return -1*balance;
     }
-    private double getTotalDue(){
+    public double getTotalDue(){
         return getAccountType().getMinimumPayment() * getAccountBalance();
     }
-    private void updateBalance() {
+    public double calculateCurrentBalance() {
         double total =  getAccountBalance() - getTotalCredit() + getTotalCharges() +
                 getAccountType().getMonthlyInterest()*(getAccountBalance() - getTotalCredit());
-        System.out.println(total);
         setBalance(total);
+        return total;
     }
-
-
-
 }

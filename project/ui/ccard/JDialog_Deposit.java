@@ -51,6 +51,7 @@ public class JDialog_Deposit extends javax.swing.JDialog
 		SymAction lSymAction = new SymAction();
 		JButton_OK.addActionListener(lSymAction);
 		JButton_Cancel.addActionListener(lSymAction);
+		setLocationRelativeTo(null);
 		//}}
 	}
 

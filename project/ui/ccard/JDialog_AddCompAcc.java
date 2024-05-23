@@ -1,6 +1,8 @@
 package ui.ccard;
 
 
+import framework.domain.AccountTypeEnum;
+
 public class JDialog_AddCompAcc extends javax.swing.JDialog
 {
     private CardFrm parentframe;
@@ -86,6 +88,7 @@ public class JDialog_AddCompAcc extends javax.swing.JDialog
 		SymAction lSymAction = new SymAction();
 		JButton_OK.addActionListener(lSymAction);
 		JButton_Calcel.addActionListener(lSymAction);
+		setLocationRelativeTo(null);
 		//}}
 	}
 
@@ -132,9 +135,9 @@ public class JDialog_AddCompAcc extends javax.swing.JDialog
        parentframe.zip=JTextField_ZIP.getText();
        parentframe.state=JTextField_ST.getText();
        if (JRadioButton_Chk.isSelected())
-           parentframe.accountType="Ch";
+           parentframe.accountType= AccountTypeEnum.CHECKING;
            else
-           parentframe.accountType="S";
+           parentframe.accountType= AccountTypeEnum.SAVINGS;
 	   parentframe.newaccount=true;
 	   dispose();
 			 

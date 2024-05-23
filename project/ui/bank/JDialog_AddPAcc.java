@@ -3,6 +3,8 @@ package ui.bank;
 		A basic implementation of the JDialog class.
 */
 
+import framework.domain.AccountTypeEnum;
+
 public class JDialog_AddPAcc extends javax.swing.JDialog
 {
     private BankFrm parentframe;
@@ -176,11 +178,11 @@ public class JDialog_AddPAcc extends javax.swing.JDialog
        parentframe.zip=JTextField_ZIP.getText();
        parentframe.state=JTextField_ST.getText();
 	   parentframe.email=JTextField_EM.getText();
-	   parentframe.birthday=JTextField_BD.getText();
+	   parentframe.birthDate=JTextField_BD.getText();
        if (JRadioButton_Chk.isSelected())
-           parentframe.accountType="Ch";
+           parentframe.accountType= AccountTypeEnum.CHECKING;
            else
-           parentframe.accountType="S";
+           parentframe.accountType= AccountTypeEnum.SAVINGS;
 	   parentframe.newaccount=true;
        dispose();
 	}

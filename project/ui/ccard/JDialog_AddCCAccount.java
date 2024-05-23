@@ -3,6 +3,8 @@ package ui.ccard;
 		A basic implementation of the JDialog class.
 */
 
+import framework.domain.AccountTypeEnum;
+
 public class JDialog_AddCCAccount extends javax.swing.JDialog
 {
     private CardFrm parentframe;
@@ -101,6 +103,7 @@ public class JDialog_AddCCAccount extends javax.swing.JDialog
 		JButton_OK.addActionListener(lSymAction);
 		JButton_Cancel.addActionListener(lSymAction);
 		JRadioButton_Bronze.addMouseListener(aSymMouse);
+		setLocationRelativeTo(null);
 		//}}
 	}
 
@@ -189,13 +192,15 @@ public class JDialog_AddCCAccount extends javax.swing.JDialog
        parentframe.state=JTextField_ST.getText();
        parentframe.ccnumber=JTextField_CCNR.getText();
        parentframe.expdate=JTextField_ExpDate.getText();
+	   parentframe.email=JTextField_Email.getText();
+
        if (JRadioButton_Gold.isSelected())
-           parentframe.accountType="Gold";
+           parentframe.accountType= AccountTypeEnum.GOLD;
            else{
             if (JRadioButton_Silver.isSelected())
-                parentframe.accountType="Silver";
+                parentframe.accountType= AccountTypeEnum.SILVER;
                 else
-                parentframe.accountType="Bronze";
+                parentframe.accountType= AccountTypeEnum.BRONZE;
            }
            
 	   parentframe.newaccount=true;

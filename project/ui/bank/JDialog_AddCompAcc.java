@@ -1,6 +1,8 @@
 package ui.bank;
 
 
+import framework.domain.AccountTypeEnum;
+
 public class JDialog_AddCompAcc extends javax.swing.JDialog
 {
     private BankFrm parentframe;
@@ -16,7 +18,7 @@ public class JDialog_AddCompAcc extends javax.swing.JDialog
 		// what Visual Cafe can generate, or Visual Cafe may be unable to back
 		// parse your Java file into its visual environment.
 		//{{INIT_CONTROLS
-		setTitle("Add compamy account");
+		setTitle("Add company account");
 		setModal(true);
 		getContentPane().setLayout(null);
 		setSize(298,339);
@@ -140,9 +142,9 @@ public class JDialog_AddCompAcc extends javax.swing.JDialog
        parentframe.zip=JTextField_ZIP.getText();
        parentframe.state=JTextField_ST.getText();
        if (JRadioButton_Chk.isSelected())
-           parentframe.accountType="Ch";
+           parentframe.accountType= AccountTypeEnum.CHECKING;
            else
-           parentframe.accountType="S";
+           parentframe.accountType= AccountTypeEnum.SAVINGS;
 	   parentframe.newaccount=true;
 	   dispose();
 			 
