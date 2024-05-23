@@ -21,8 +21,8 @@ public class CreditCardFactory implements AccountFactory {
                                  String zip, AccountTypeEnum accountType, int numberOfEmployees,
                                  BankAccountTypeEnum bankAccountTypeEnum) {
         Address address = new Address(street, city, state, zip);
-        Customer customer = new Customer(accountNumber,address,email,dateOfBirth);
-        Account account = new CreditCardAccount(accountNumber,balance,customer);
+        Customer customer = new Customer(name, address, email, dateOfBirth);
+        Account account = new CreditCardAccount(accountNumber, balance, customer,accountType);
         if(accountType == AccountTypeEnum.BRONZE)
             account.setAccountType(bronzeAccount);
         else if (accountType == AccountTypeEnum.GOLD)

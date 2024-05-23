@@ -98,6 +98,7 @@ public class JDialog_AddPAcc extends javax.swing.JDialog
 		SymAction lSymAction = new SymAction();
 		JButton_OK.addActionListener(lSymAction);
 		JButton_Cancel.addActionListener(lSymAction);
+		this.setLocationRelativeTo(null);
 		//}}
 	}
 
