@@ -1,8 +1,6 @@
 package banking.service;
 
-import banking.domain.BankFactory;
-import banking.domain.CompanyBankAccount;
-import banking.domain.PersonalBankAccount;
+import banking.domain.*;
 import banking.data.BankingAccountDAO;
 import framework.data.AccountDAO;
 import framework.domain.Account;
@@ -17,21 +15,16 @@ import java.util.Collection;
 
 public class BankAccountService extends AccountServiceImpl {
 
+    private AccountFactory accountFactory;
     public BankAccountService(AccountDAO accountDAO) {
-        super(accountDAO, new BankFactory());
+        super(accountDAO, new BankAccountCreater());
     }
 
-    public Account createAccount(String bankAccountType, String accountNumber, double balance,
-                                 String name, String street, String city, String state, String zip, String email, LocalDate dateOfBirth, AccountTypeEnum accountType, int numberOfEmployees) {
-        System.out.println("Creating account " + accountNumber);
-        Account account;
-        if(bankAccountType.equals("Personal"))
-            account = getAccountFactory().createPersonalBankAccount(accountNumber,
-                    name, street, city, state, zip, email, dateOfBirth, accountType);
-        else
-            account =  getAccountFactory().createCompanyBankAccount(accountNumber,
-                    name, street, city, state, zip, email, dateOfBirth, accountType, numberOfEmployees);
-        getAccountDAO().saveAccount(account);
-        return account;
+
+    @Override
+    public Account createAccount(String accountNumber, double balance, String name, String email, LocalDate dateOfBirth, String street, String city, String state, String zip, AccountTypeEnum accountType, int numberOfEmployees, BankAccountTypeEnum bankAccountTypeEnum) {
+        return accountFactory.createAccount(accountNumber,balance,name,email,dateOfBirth,street,city,
+                state,zip,accountType,numberOfEmployees,bankAccountTypeEnum);
     }
+
 }

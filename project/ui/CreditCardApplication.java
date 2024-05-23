@@ -1,5 +1,6 @@
 package ui;
 
+import banking.domain.BankAccountTypeEnum;
 import creditcard.domain.CreditCardAccount;
 import creditcard.service.CreditCardService;
 import framework.data.AccountDAO;
@@ -20,11 +21,13 @@ public class CreditCardApplication {
     public CreditCardApplication() {
         this.accountService = new CreditCardService(new AccountDAOImpl());
     }
-    public Account createAccount(String bankAccountType, String accountNumber, double balance,
-                                 String name, String street, String city, String state, String zip, String email,
-                                 LocalDate dateOfBirth, AccountTypeEnum accountType, int numberOfEmployees){
-        return accountService.createAccount(bankAccountType, accountNumber, balance,
-        name, street, city, state, zip, email, dateOfBirth, accountType, numberOfEmployees);
+    public Account createAccount(String accountNumber, double balance, String name, String email,
+                                 LocalDate dateOfBirth, String street, String city, String state,
+                                 String zip, AccountTypeEnum accountType, int numberOfEmployees,
+                                 BankAccountTypeEnum bankAccountTypeEnum) {
+
+        return accountService.createAccount(accountNumber,balance,name,email,dateOfBirth,street,city,
+                state,zip,accountType,numberOfEmployees,bankAccountTypeEnum);
     }
     public void deposit(String accountNumber, double amount){
         accountService.deposit(accountNumber, amount);
