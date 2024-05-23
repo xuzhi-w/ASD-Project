@@ -14,12 +14,14 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
-public class CreditCardApplication {
+public class CreditCardApplication implements Application{
 
     private AccountService accountService;
     public CreditCardApplication() {
         this.accountService = new CreditCardService(new AccountDAOImpl());
     }
+
+    @Override
     public Account createAccount(String accountNumber, double balance, String name, String email,
                                  LocalDate dateOfBirth, String street, String city, String state,
                                  String zip, AccountTypeEnum accountType, int numberOfEmployees,
@@ -28,18 +30,23 @@ public class CreditCardApplication {
         return accountService.createAccount(accountNumber,balance,name,email,dateOfBirth,street,city,
                 state,zip,accountType,numberOfEmployees,bankAccountTypeEnum);
     }
+    @Override
     public void deposit(String accountNumber, double amount){
         accountService.deposit(accountNumber, amount);
     }
+    @Override
     public void withdraw(String accountNumber, double amount){
         accountService.withdraw(accountNumber, amount);
     }
+    @Override
     public Account getAccount(String accountNumber){
         return accountService.getAccount(accountNumber);
     }
+    @Override
     public Collection<Account> getAllAccounts(){
         return accountService.getAllAccounts();
     }
+    @Override
     public List<AccountEntry> getAccountEntries(String accountNumber){
         return accountService.getAccount(accountNumber).getEntryList().stream().toList();
     }
