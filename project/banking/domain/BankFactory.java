@@ -8,7 +8,6 @@ public abstract class BankFactory implements AccountFactory {
 
     AccountType checkingAccount = new CheckingAccount();
     AccountType savingAccount = new SavingAccount();
-//    BankAccountCreater bankAccountCreater = new BankAccountCreater();
 
     @Override
     public Account createAccount(String accountNumber, double balance, String name, String email,

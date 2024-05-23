@@ -2,6 +2,7 @@ package creditcard.service;
 
 import banking.domain.BankAccountTypeEnum;
 import creditcard.domain.CreditCardAccount;
+import creditcard.domain.CreditCardCreater;
 import creditcard.domain.CreditCardFactory;
 import framework.data.AccountDAO;
 import framework.domain.Account;
@@ -16,7 +17,7 @@ public class CreditCardService extends AccountServiceImpl {
 
     //private AccountFactory accountFactory;
     public CreditCardService(AccountDAO accountDAO) {
-        super(accountDAO, new CreditCardFactory());
+        super(accountDAO, new CreditCardCreater());
     }
 
 
