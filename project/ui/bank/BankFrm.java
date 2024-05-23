@@ -252,7 +252,7 @@ public class BankFrm extends javax.swing.JFrame
 		pac.show();
 		bankingApplication.createAccount( accountnr,
 				0, clientName, email, LocalDate.of(2020, 4, 7),
-				street,city,state,zip,accountType, 0, BankAccountTypeEnum.CAMPANY);
+				street,city,state,zip,accountType, 0, BankAccountTypeEnum.PERSONAL);
 		if (newaccount){
             // add row to table
             rowdata[0] = accountnr;

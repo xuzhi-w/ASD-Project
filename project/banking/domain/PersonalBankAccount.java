@@ -10,6 +10,7 @@ public class PersonalBankAccount extends BankAccount{
     }
 
     public void deposit(double amount) {
+        //System.out.println("Deposit " + amount + " to " + getAccountNumber());
         AccountEntry entry = new AccountEntry(amount, "Deposit", "", "", TransactionType.DEPOSIT);
         addEntry(entry);
         double balance = getBalance();
