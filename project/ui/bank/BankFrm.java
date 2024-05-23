@@ -1,9 +1,19 @@
 package ui.bank;
 
+import banking.data.BankingAccountDAO;
+import banking.domain.BankAccount;
+import framework.TransactionRecordsWindow;
+import framework.data.AccountDAO;
+import framework.domain.Account;
+import framework.domain.AccountEntry;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * A basic JFC based application.
@@ -15,12 +25,18 @@ public class BankFrm extends javax.swing.JFrame
      ****/
     String accountnr, clientName,street,city,zip,state,accountType,clientType,amountDeposit;
     boolean newaccount;
-    private DefaultTableModel model;
+    private static DefaultTableModel model;
     private JTable JTable1;
     private JScrollPane JScrollPane1;
     BankFrm myframe;
     private Object rowdata[];
-    
+
+	private AccountDAO bankDao  = new BankingAccountDAO();
+    private Collection<Account> daoAccounts =  bankDao.getAccounts();
+
+	private ArrayList<Account> accountList = new ArrayList<>();
+
+
 	public BankFrm()
 	{
 		myframe = this;
@@ -39,15 +55,18 @@ public class BankFrm extends javax.swing.JFrame
 		/Deposit, Withdraw and Exit from the system
 		*/
         JScrollPane1 = new JScrollPane();
-        model = new DefaultTableModel();
-        JTable1 = new JTable(model);
-        model.addColumn("AccountNr");
-        model.addColumn("Name");
-        model.addColumn("City");
-        model.addColumn("P/C");
-        model.addColumn("Ch/S");
-        model.addColumn("Amount");
-        rowdata = new Object[8];
+		//add some data , for demo use only
+		Object[][] data = addSomeData();
+		String[] columns = {"AccountNr","Name","City","P/C","Ch/S","Amount"};
+//        model.addColumn("AccountNr");
+//        model.addColumn("Name");
+//        model.addColumn("City");
+//        model.addColumn("P/C");
+//        model.addColumn("Ch/S");
+//        model.addColumn("Amount");
+		model = new DefaultTableModel(data,columns);
+		JTable1 = new JTable(model);
+		rowdata = new Object[8];
         newaccount=false;
         
         
@@ -96,10 +115,45 @@ public class BankFrm extends javax.swing.JFrame
 		JButton_Deposit.addActionListener(lSymAction);
 		JButton_Withdraw.addActionListener(lSymAction);
 		JButton_Addinterest.addActionListener(lSymAction);
-		
+		JButton_GenerateReport.addActionListener(lSymAction);
+		setLocationRelativeTo(null);
 	}
 
-	
+	private static Object[][] addSomeData() {
+		Object[][] data = new Object[5][6];
+		/**
+		 *  model.addColumn("AccountNr");
+		 *         model.addColumn("Name");
+		 *         model.addColumn("City");
+		 *         model.addColumn("P/C");
+		 *         model.addColumn("Ch/S");
+		 *         model.addColumn("Amount");
+		 */
+		Random random = new Random();
+
+		// Generate a random double value with two decimal places between 0 and 100
+		for(int i = 0; i < 5; i++){
+			data[i][0] = "1000"+i;
+			data[i][1] = "John"+i;
+			data[i][2] = "York"+i;
+			data[i][3] = i % 2 == 0 ? "P":"C";
+			data[i][4] = i % 2 == 1 ? "Ch":"Sa";
+			double randomDouble = Math.round(random.nextDouble()  * 100.0) / 100.0;
+			data[i][5] = 10000 + random.nextInt(1000000) +  randomDouble;
+
+
+
+		}
+
+		// put some entries to these accounts
+		return data;
+	}
+
+	private static void putSomeEntries(Account account) {
+//		Account
+	}
+
+
 	/*****************************************************
 	 * The entry point for this application.
 	 * Sets the Look and Feel to the System Look and Feel.
@@ -125,7 +179,9 @@ public class BankFrm extends javax.swing.JFrame
 			//Ensure the application exits with an error condition.
 			System.exit(1);
 		}
+
 	}
+
 
 
 	javax.swing.JPanel JPanel1 = new javax.swing.JPanel();
@@ -191,8 +247,9 @@ public class BankFrm extends javax.swing.JFrame
 			else if (object == JButton_Addinterest)
 				JButtonAddinterest_actionPerformed(event);
 			else if (object == JButton_GenerateReport){
-				checkSelected();
-				JButton_GenerateReport_actionPerformed(event);
+				if(checkSelected()){
+					JButton_GenerateReport_actionPerformed(event);
+				};
 			}
 		}
 		public boolean checkSelected(){
@@ -248,6 +305,10 @@ public class BankFrm extends javax.swing.JFrame
         
     }
 
+	/**
+	 * Generate Report
+	 * @param event
+	 */
 	void JButton_GenerateReport_actionPerformed(java.awt.event.ActionEvent event)
 	{
 		/*
@@ -255,23 +316,8 @@ public class BankFrm extends javax.swing.JFrame
 		 construct a JDialog_AddPAcc type object
 		 set the boundaries and show it
 		*/
+		TransactionRecordsWindow recordsWindow = new TransactionRecordsWindow(accountNumber);
 
-		JDialog_AddPAcc pac = new JDialog_AddPAcc(myframe);
-		pac.setBounds(450, 20, 300, 330);
-		pac.show();
-
-		if (newaccount){
-			// add row to table
-			rowdata[0] = accountnr;
-			rowdata[1] = clientName;
-			rowdata[2] = city;
-			rowdata[3] = "P";
-			rowdata[4] = accountType;
-			rowdata[5] = "0";
-			model.addRow(rowdata);
-			JTable1.getSelectionModel().setAnchorSelectionIndex(-1);
-			newaccount=false;
-		}
 
 
 

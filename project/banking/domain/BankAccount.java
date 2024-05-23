@@ -20,7 +20,7 @@ public abstract class BankAccount extends Account {
 
 	@Override
 	public void generateReport() {
-
+//		return this.getEntryList();
 	}
 
 

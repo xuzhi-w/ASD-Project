@@ -1,4 +1,4 @@
-package ui.ccard;
+package framework;
 
 import creditcard.data.CreditAccountDAO;
 import framework.domain.Account;
@@ -7,6 +7,9 @@ import framework.domain.AccountEntry;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -21,12 +24,19 @@ public class TransactionRecordsWindow extends JFrame {
 
         // Assuming you have a method to retrieve transaction records based on the account name
         DefaultTableModel transactionModel = getTransactionRecords(accountNumber);
-        JTable transactionTable = new JTable(transactionModel);
+        JTable transactionTable = new JTable(transactionModel) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Disable editing for all cells
+            }
+        };
+
         JScrollPane scrollPane = new JScrollPane(transactionTable);
 
         add(scrollPane, BorderLayout.CENTER);
 
         setVisible(true);
+        setLocationRelativeTo(null);
     }
 
     private DefaultTableModel getTransactionRecords(String accountNumber) {
@@ -40,10 +50,9 @@ public class TransactionRecordsWindow extends JFrame {
         if(account != null){
             accountEntries = (ArrayList)account.getEntryList();
         }
-        //data used for demo
-        accountEntries.add(new AccountEntry(new Date(2024,01,01),100.00,"a T shirt","10001","Tom"));
-        accountEntries.add(new AccountEntry(new Date(2024,01,02),200.00,"a T shirt2","10001","Tom"));
-        accountEntries.add(new AccountEntry(new Date(2024,01,03),300.00,"a T shirt3","10001","Tom"));
+        //add some data for demo use
+        addSomeData(accountEntries);
+
         Object[][] data = new Object[accountEntries.size()][5]; // Assuming there are 5 columns
         // Populate the array with data from the ArrayList
         for (int i = 0; i < accountEntries.size(); i++) {
@@ -62,4 +71,16 @@ public class TransactionRecordsWindow extends JFrame {
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
         return model;
     }
+
+    public void addSomeData(ArrayList<AccountEntry> accountEntries){
+        //data used for demo
+        // Define the format pattern
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for(int i = 0; i < 5; i++){
+            Date currentDate = new Date(2024,01,01,10,10,10);
+            // Format the date
+            accountEntries.add(new AccountEntry(currentDate,100 + 100 * i,"A T shirt"+i,"1000"+i,"Tom"+i));
+        }
+    }
+
 }

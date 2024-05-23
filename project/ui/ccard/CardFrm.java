@@ -1,5 +1,7 @@
 package ui.ccard;
 
+import framework.TransactionRecordsWindow;
+
 import java.awt.BorderLayout;
 
 import javax.swing.JOptionPane;
