@@ -23,6 +23,10 @@ public class CreditCardApplication implements Application{
     public AccountService getAccountService() {
         return accountService;
     }
+    private static CreditCardApplication instance = new CreditCardApplication();
+    public static CreditCardApplication getInstance(){
+        return instance;
+    }
 
     public CreditCardApplication() {
         this.accountService = new CreditCardService(new AccountDAOImpl());
@@ -62,8 +66,6 @@ public class CreditCardApplication implements Application{
     public TransactionRecordsWindow createTransactionRecordsWindow(String accountNumber){
         CreditCardAccount account = (CreditCardAccount)getAccount(accountNumber);
         account.generateReport();
-        return new TransactionRecordsWindow(accountNumber, getAccountEntries(accountNumber), account.getPreviousBalance(),
-                account.getTotalCharges(), account.getTotalCredits(), account.getNewBalance(),
-                account.getTotalDue());
+        return new TransactionRecordsWindow(account);
     }
 }

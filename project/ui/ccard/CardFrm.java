@@ -6,6 +6,7 @@ import framework.data.AccountDAO;
 import framework.domain.*;
 
 import framework.domain.AccountTypeEnum;
+import framework.utils.CommonRecordsWindow;
 import ui.CreditCardApplication;
 
 import java.awt.BorderLayout;
@@ -37,7 +38,7 @@ public class CardFrm extends javax.swing.JFrame
     private JScrollPane JScrollPane1;
     CardFrm thisframe;
     private Object rowdata[];
-
+    private CreditCardApplication application = CreditCardApplication.getInstance();
 	private String accountNumber;
 
 //
@@ -262,9 +263,8 @@ public class CardFrm extends javax.swing.JFrame
 		int selection = JTable1.getSelectionModel().getMinSelectionIndex();
 		if(selection != -1){
 			String accountNumber = (String)model.getValueAt(selection, 1);
-
 			addSomeData(accountNumber);
-			TransactionRecordsWindow recordsWindow = creditCardApplication.
+			CommonRecordsWindow recordsWindow = application.
 					createTransactionRecordsWindow(accountNumber);
 		}
 	}
