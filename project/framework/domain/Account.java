@@ -1,6 +1,6 @@
 package framework.domain;
 
-import framework.integration.EmailSenderSingleton;
+import framework.integration.EmailSender;
 import framework.integration.Observer;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public abstract class Account implements Subject{
 		this.balance = 0;
 		this.observers = new ArrayList<>();
 		this.entryList = new ArrayList<>();
-		registerObserver(EmailSenderSingleton.getInstance());
+		registerObserver(EmailSender.getInstance());
 	}
 
 	public String getAccountNumber() {
