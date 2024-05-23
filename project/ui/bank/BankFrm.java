@@ -6,6 +6,7 @@ import framework.domain.AccountTypeEnum;
 import framework.domain.Address;
 import framework.domain.Customer;
 import ui.BankingApplication;
+import ui.ccard.TransactionRecordsWindow;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -73,6 +74,7 @@ public class BankFrm extends javax.swing.JFrame
 		JButton_PerAC.setBounds(24,20,192,33);
 		//add generate report button
 		JButton_GenerateReport.setText("Generate report of accounts");
+		JButton_GenerateReport.setActionCommand("jbutton");
 		JPanel1.add(JButton_GenerateReport);
 		JButton_GenerateReport.setBounds(24,55,192,33);
 
@@ -107,6 +109,7 @@ public class BankFrm extends javax.swing.JFrame
 		JButton_Deposit.addActionListener(lSymAction);
 		JButton_Withdraw.addActionListener(lSymAction);
 		JButton_Addinterest.addActionListener(lSymAction);
+		JButton_GenerateReport.addActionListener(lSymAction);
 
 		bankingApplication = new BankingApplication();
 		
@@ -204,8 +207,11 @@ public class BankFrm extends javax.swing.JFrame
 			else if (object == JButton_Addinterest)
 				JButtonAddinterest_actionPerformed(event);
 			else if (object == JButton_GenerateReport){
-				checkSelected();
-				JButton_GenerateReport_actionPerformed(event);
+				//checkSelected();
+				//JButton_GenerateReport_actionPerformed(event);
+				if(checkSelected()){
+					JButton_GenerateReport_actionPerformed(event);
+				};
 			}
 		}
 		public boolean checkSelected(){
@@ -273,24 +279,12 @@ public class BankFrm extends javax.swing.JFrame
 		 set the boundaries and show it
 		*/
 
-		JDialog_AddPAcc pac = new JDialog_AddPAcc(myframe);
-		pac.setBounds(450, 20, 300, 330);
-		pac.show();
-
-		if (newaccount){
-			// add row to table
-			rowdata[0] = accountnr;
-			rowdata[1] = clientName;
-			rowdata[2] = city;
-			rowdata[3] = "P";
-			rowdata[4] = accountType;
-			rowdata[5] = "0";
-			model.addRow(rowdata);
-			JTable1.getSelectionModel().setAnchorSelectionIndex(-1);
-			newaccount=false;
+		int selection = JTable1.getSelectionModel().getMinSelectionIndex();
+		if(selection != -1){
+			String accountNumber = (String)model.getValueAt(selection, 0);
+			System.out.println(accountNumber);
+			BankTransactionRecordsWindow recordsWindow = new BankTransactionRecordsWindow(accountNumber, bankingApplication.getAccountEntries(accountNumber));
 		}
-
-
 
 	}
 

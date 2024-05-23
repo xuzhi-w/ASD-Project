@@ -2,7 +2,10 @@ package ui;
 
 import banking.service.BankAccountService;
 import framework.data.AccountDAOImpl;
+import framework.domain.AccountEntry;
 import framework.service.AccountService;
+
+import java.util.List;
 
 public class BankingApplication {
     private AccountService accountService;
@@ -16,6 +19,10 @@ public class BankingApplication {
 
     public void setAccountService(AccountService accountService) {
         this.accountService = accountService;
+    }
+
+    public List<AccountEntry> getAccountEntries(String accountNumber) {
+        return accountService.getAccount(accountNumber).getEntryList().stream().toList();
     }
 
     public static void main(String[] args) {

@@ -23,7 +23,7 @@ public abstract class Account implements Subject{
 	public Account(String accountNumber, double balance, Customer customer) {
 		this.accountNumber = accountNumber;
 		this.customer = customer;
-		this.balance = balance;
+		this.balance = 0;
 		this.observers = new ArrayList<>();
 		this.entryList = new ArrayList<>();
 	}
