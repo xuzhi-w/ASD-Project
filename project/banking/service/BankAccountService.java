@@ -2,16 +2,29 @@ package banking.service;
 
 import banking.domain.*;
 import framework.data.AccountDAO;
+import framework.data.AccountDAOImpl;
 import framework.domain.Account;
 import framework.domain.AccountTypeEnum;
 import framework.service.AccountServiceImpl;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class BankAccountService extends AccountServiceImpl {
+    private static volatile BankAccountService instance;
 
-    public BankAccountService(AccountDAO accountDAO) {
+    private BankAccountService(AccountDAO accountDAO) {
         super(accountDAO, new BankAccountCreator());
+    }
+    public static BankAccountService getInstance() {
+        if (Objects.isNull(instance)) {
+            synchronized (BankAccountService.class) {
+                if (Objects.isNull(instance)) {
+                    instance = new BankAccountService(AccountDAOImpl.getInstance());
+                }
+            }
+        }
+        return instance;
     }
 
 

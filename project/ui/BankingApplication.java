@@ -17,7 +17,7 @@ import java.util.List;
 public class BankingApplication implements Application{
     private AccountService accountService;
     public BankingApplication() {
-        accountService = new BankAccountService(new AccountDAOImpl());
+        accountService = BankAccountService.getInstance();
     }
 
     public AccountService getAccountService() {

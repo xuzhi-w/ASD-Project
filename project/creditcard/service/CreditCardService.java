@@ -6,6 +6,7 @@ import creditcard.domain.CreditCardAccount;
 import creditcard.domain.CreditCardCreater;
 import creditcard.domain.CreditCardFactory;
 import framework.data.AccountDAO;
+import framework.data.AccountDAOImpl;
 import framework.domain.Account;
 import framework.domain.AccountFactory;
 import framework.domain.AccountTypeEnum;
@@ -13,6 +14,7 @@ import framework.domain.Customer;
 import framework.service.AccountServiceImpl;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class CreditCardService extends AccountServiceImpl {
 
@@ -22,8 +24,13 @@ public class CreditCardService extends AccountServiceImpl {
     }
 
     public static CreditCardService  getServiceInstance(){
-        if(instance == null){
-            instance = new CreditCardService(CreditAccountDAO.getInstance());
+        if(Objects.isNull(instance)){
+            synchronized (CreditCardService.class){
+                if(Objects.isNull(instance)){
+                    instance = new CreditCardService(AccountDAOImpl.getInstance());
+                }
+            }
+
         }
         return instance;
     }
