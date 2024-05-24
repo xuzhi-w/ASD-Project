@@ -1,7 +1,9 @@
 package ui;
 
 import banking.domain.BankAccountTypeEnum;
+import creditcard.data.CreditAccountDAO;
 import creditcard.domain.CreditCardAccount;
+import creditcard.domain.CreditCardFactory;
 import creditcard.service.CreditCardService;
 import framework.data.AccountDAOImpl;
 import framework.domain.Account;
@@ -18,18 +20,21 @@ import java.util.stream.Collectors;
 
 public class CreditCardApplication implements Application{
 
-    private AccountService accountService;
+    private static AccountService accountService;
 
-    public AccountService getAccountService() {
+    public static AccountService getAccountService() {
         return accountService;
     }
     private static CreditCardApplication instance = new CreditCardApplication();
     public static CreditCardApplication getInstance(){
+        if(instance == null){
+            instance = new CreditCardApplication();
+        }
         return instance;
     }
 
-    public CreditCardApplication() {
-        this.accountService = new CreditCardService(new AccountDAOImpl());
+    private CreditCardApplication() {
+        this.accountService = CreditCardService.getServiceInstance();
     }
 
     @Override
@@ -64,7 +69,7 @@ public class CreditCardApplication implements Application{
                 .compareTo(e2.getDate())).collect(Collectors.toList());
     }
     public TransactionRecordsWindow createTransactionRecordsWindow(String accountNumber){
-        CreditCardAccount account = (CreditCardAccount)getAccount(accountNumber);
+        CreditCardAccount account = (CreditCardAccount)accountService.getAccount(accountNumber);
         account.generateReport();
         return new TransactionRecordsWindow(account);
     }

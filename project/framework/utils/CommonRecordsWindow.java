@@ -11,10 +11,13 @@ import java.util.List;
 public abstract class CommonRecordsWindow extends JFrame {
 
     public CommonRecordsWindow(Account account) {
-        DefaultTableModel model = getTransactionRecords(account.getAccountNumber(),(List<AccountEntry>) account.getEntryList());
-        prepareWindow(model,account.getAccountNumber());
+        DefaultTableModel model = getTransactionRecords(account);
+        prepareWindow(model,account);
     }
 
-    protected abstract DefaultTableModel getTransactionRecords(String accountNumber,List<AccountEntry> accountEntries);
-    protected abstract void prepareWindow(DefaultTableModel model,String accountNumber);
+    public CommonRecordsWindow() throws HeadlessException {
+    }
+
+    protected abstract DefaultTableModel getTransactionRecords(Account account1);
+    protected abstract void prepareWindow(DefaultTableModel model,Account account1);
 }

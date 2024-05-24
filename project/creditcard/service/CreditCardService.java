@@ -1,6 +1,7 @@
 package creditcard.service;
 
 import banking.domain.BankAccountTypeEnum;
+import creditcard.data.CreditAccountDAO;
 import creditcard.domain.CreditCardAccount;
 import creditcard.domain.CreditCardCreater;
 import creditcard.domain.CreditCardFactory;
@@ -15,11 +16,17 @@ import java.time.LocalDate;
 
 public class CreditCardService extends AccountServiceImpl {
 
-    //private AccountFactory accountFactory;
-    public CreditCardService(AccountDAO accountDAO) {
+    private static volatile CreditCardService instance;
+    private CreditCardService(AccountDAO accountDAO) {
         super(accountDAO, new CreditCardCreater());
     }
 
+    public static CreditCardService  getServiceInstance(){
+        if(instance == null){
+            instance = new CreditCardService(CreditAccountDAO.getInstance());
+        }
+        return instance;
+    }
 
     @Override
     public Account createAccount(String accountNumber, double balance, String name, String email,

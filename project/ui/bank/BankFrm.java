@@ -8,6 +8,7 @@ import framework.domain.Account;
 import framework.domain.AccountTypeEnum;
 import framework.utils.CommonRecordsWindow;
 import ui.BankingApplication;
+import ui.ccard.CardFrm;
 
 
 import javax.swing.*;
@@ -39,6 +40,8 @@ public class BankFrm extends javax.swing.JFrame
 
 	private AccountDAO bankDao = new BankingAccountDAO();
 	private Account currentAccount;
+
+	private static volatile BankFrm bankFrm;
 
 	public BankFrm()
 	{
@@ -135,7 +138,7 @@ public class BankFrm extends javax.swing.JFrame
 		    }
 		    
 			//Create a new instance of our application's frame, and make it visible.
-			(new BankFrm()).setVisible(true);
+			getBankFrmInstance().setVisible(true);
 		} 
 		catch (Throwable t) {
 			t.printStackTrace();
@@ -145,6 +148,17 @@ public class BankFrm extends javax.swing.JFrame
 
 	}
 
+	public static BankFrm getBankFrmInstance(){
+		BankFrm result = bankFrm;
+		if(result == null){
+			synchronized (CardFrm.class){
+				if(result == null){
+					result = new BankFrm();
+				}
+			}
+		}
+		return result;
+	}
 
 
 	javax.swing.JPanel JPanel1 = new javax.swing.JPanel();

@@ -6,7 +6,7 @@ import framework.domain.*;
 import java.time.LocalDate;
 
 public abstract class CreditCardFactory implements AccountFactory {
-    
+
     BronzeAccount bronzeAccount = new BronzeAccount();
     GoldAccount goldAccount = new GoldAccount();
     SilverAccount silverAccount = new SilverAccount();
