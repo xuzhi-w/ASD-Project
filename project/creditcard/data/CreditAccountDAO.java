@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CreditAccountDAO implements AccountDAO {
-    Map<String, Account> accountlist = new HashMap<>();
+    private static Map<String, Account> accountlist = new HashMap<>();
     @Override
     public void saveAccount(Account account) {
         accountlist.put(account.getAccountNumber(), account);
@@ -28,5 +28,13 @@ public class CreditAccountDAO implements AccountDAO {
     @Override
     public Collection<Account> getAccounts() {
         return accountlist.values();
+    }
+
+    private static CreditAccountDAO creditAccountDAO;
+    public  static CreditAccountDAO getInstance(){
+        if(creditAccountDAO == null){
+            creditAccountDAO = new CreditAccountDAO();
+        }
+        return creditAccountDAO;
     }
 }

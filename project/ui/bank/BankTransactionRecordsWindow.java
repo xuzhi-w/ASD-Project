@@ -7,6 +7,7 @@ import framework.utils.CommonRecordsWindow;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BankTransactionRecordsWindow extends CommonRecordsWindow {
@@ -16,11 +17,11 @@ public class BankTransactionRecordsWindow extends CommonRecordsWindow {
         super(account);
     }
 
-    public DefaultTableModel getTransactionRecords(String accountNumber,List<AccountEntry> entries) {
+    public DefaultTableModel getTransactionRecords(Account account) {
         // Implement this method to retrieve transaction records based on the account name
         // This could involve querying a database or accessing some data source
         // For demonstration purposes, let's assume a simple DefaultTableModel
-
+        List<AccountEntry> entries = (ArrayList)account.getEntryList();
         //data used for demo
         Object[][] data = new Object[entries.size()][5]; // Assuming there are 5 columns
         // Populate the array with data from the ArrayList
@@ -42,8 +43,8 @@ public class BankTransactionRecordsWindow extends CommonRecordsWindow {
     }
 
     @Override
-    protected void prepareWindow(DefaultTableModel model,String accountNumber) {
-        setTitle("All Records of Customer's Accounts: " + accountNumber );
+    protected void prepareWindow(DefaultTableModel model,Account account) {
+        setTitle("All Records of Customer's Accounts: " + account.getAccountNumber() );
         setSize(800, 600);
         // Assuming you have a method to retrieve transaction records based on the account name
         JTable transactionTable = new JTable(model);

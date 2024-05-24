@@ -26,7 +26,8 @@ import javax.swing.table.DefaultTableModel;
 public class CardFrm extends javax.swing.JFrame
 {
 
-	CreditCardApplication creditCardApplication;
+
+	private static volatile CardFrm cardFrm;
     /****
      * init variables in the object
      ****/
@@ -38,12 +39,8 @@ public class CardFrm extends javax.swing.JFrame
     private JScrollPane JScrollPane1;
     CardFrm thisframe;
     private Object rowdata[];
-    private CreditCardApplication application = CreditCardApplication.getInstance();
-	private String accountNumber;
+    private CreditCardApplication creditCardApplication = CreditCardApplication.getInstance();
 
-//
-//	private AccountDAO dao = new CreditAccountDAO();
-//	private Collection<Account> daoAccounts =  dao.getAccounts();
     
 	public CardFrm()
 	{
@@ -106,7 +103,7 @@ public class CardFrm extends javax.swing.JFrame
 		JButton_Deposit.addActionListener(lSymAction);
 		JButton_Withdraw.addActionListener(lSymAction);
 		setLocationRelativeTo(null);
-		creditCardApplication = new CreditCardApplication();
+		creditCardApplication = CreditCardApplication.getInstance();
 	}
 
 
@@ -128,8 +125,15 @@ public class CardFrm extends javax.swing.JFrame
 		    }
 		    
 			//Create a new instance of our application's frame, and make it visible.
-			(new CardFrm()).setVisible(true);
-		} 
+//			(new CardFrm()).setVisible(true);
+			for(int i = 0; i < 2 ; i++){
+//				new CardFrm().setVisible(true);
+				cardFrm = getCardFrmInstance();
+				if(!cardFrm.isShowing()){
+					cardFrm.setVisible(true);
+				}
+			}
+		}
 		catch (Throwable t) {
 			t.printStackTrace();
 			//Ensure the application exits with an error condition.
@@ -137,7 +141,17 @@ public class CardFrm extends javax.swing.JFrame
 		}
 	}
 
-
+	public static CardFrm getCardFrmInstance(){
+		CardFrm result = cardFrm;
+		if(result == null){
+			synchronized (CardFrm.class){
+				if(result == null){
+					result = new CardFrm();
+				}
+			}
+		}
+		return result;
+	}
 	javax.swing.JPanel JPanel1 = new javax.swing.JPanel();
 	javax.swing.JButton JButton_NewCCAccount = new javax.swing.JButton();
 	javax.swing.JButton JButton_GenBill = new javax.swing.JButton();
@@ -190,29 +204,12 @@ public class CardFrm extends javax.swing.JFrame
 			else if (object == JButton_NewCCAccount)
 				JButtonNewCCAC_actionPerformed(event);
 			else if (object == JButton_GenBill){
-				if(checkSelected()){
 					JButtonGenerateBill_actionPerformed(event);
-				};
 			}else if (object == JButton_Deposit)
 				JButtonDeposit_actionPerformed(event);
 			else if (object == JButton_Withdraw)
 				JButtonWithdraw_actionPerformed(event);
 			
-		}
-
-		public boolean checkSelected(){
-			// Check if a row is selected
-			int selectedRow = JTable1.getSelectedRow();
-			if (selectedRow != -1) {
-				// A row is selected
-//				JOptionPane.showMessageDialog(getContentPane(), "Row " + selectedRow + " is selected.");
-				accountNumber = (String) model.getValueAt(selectedRow, 1);
-				return true;
-			} else if(selectedRow == -1) {
-				// No row is selected
-				JOptionPane.showMessageDialog(getContentPane(), "No row is selected.");
-			}
-			return false;
 		}
 	}
     
@@ -264,7 +261,7 @@ public class CardFrm extends javax.swing.JFrame
 		if(selection != -1){
 			String accountNumber = (String)model.getValueAt(selection, 1);
 			addSomeData(accountNumber);
-			CommonRecordsWindow recordsWindow = application.
+			CommonRecordsWindow recordsWindow = creditCardApplication.
 					createTransactionRecordsWindow(accountNumber);
 		}
 	}

@@ -7,10 +7,6 @@ import java.time.LocalDate;
 
 public class CreditCardFactory implements AccountFactory {
 
-//    @Override
-//    public Account createAccount(String accountNumber, double balance, Customer customer, String accountType, int numberOfEmployees) {
-//        return new CreadicardAccount(accountNumber,balance,customer);
-//    }
     BronzeAccount bronzeAccount = new BronzeAccount();
     GoldAccount goldAccount = new GoldAccount();
     SilverAccount silverAccount = new SilverAccount();
