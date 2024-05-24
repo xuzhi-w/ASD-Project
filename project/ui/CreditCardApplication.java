@@ -16,18 +16,24 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class CreditCardApplication implements Application{
 
-    private static AccountService accountService;
+    private  AccountService accountService;
 
-    public static AccountService getAccountService() {
+    public AccountService getAccountService() {
         return accountService;
     }
-    private static CreditCardApplication instance = new CreditCardApplication();
+    private static volatile CreditCardApplication instance;
     public static CreditCardApplication getInstance(){
-        if(instance == null){
+        if(Objects.isNull(instance)){
+            synchronized (CreditCardApplication.class){
+                if(Objects.isNull(instance)){
+                    instance = new CreditCardApplication();
+                }
+            }
             instance = new CreditCardApplication();
         }
         return instance;

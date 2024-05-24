@@ -7,11 +7,11 @@ public class CreditCardCreater extends CreditCardFactory{
     @Override
     public void setAccountype(Account account, AccountTypeEnum accountTypeEnum) {
         if (accountTypeEnum == AccountTypeEnum.BRONZE){
-            account.setAccountType(bronzeAccount);
+            account.setAccountType(BronzeAccount.getInstance());
         } else if (accountTypeEnum == AccountTypeEnum.SILVER) {
-            account.setAccountType(silverAccount);
+            account.setAccountType(SilverAccount.getInstance());
         }else if (accountTypeEnum == AccountTypeEnum.GOLD) {
-            account.setAccountType(goldAccount);
+            account.setAccountType(GoldAccount.getInstance());
         }
     }
 }

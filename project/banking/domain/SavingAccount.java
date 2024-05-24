@@ -1,7 +1,22 @@
 package banking.domain;
 
-public class SavingAccount implements BankingAccountType{
+import creditcard.domain.SilverAccount;
 
+import java.util.Objects;
+
+public class SavingAccount implements BankingAccountType{
+    private static volatile SavingAccount instance;
+    private SavingAccount(){}
+    public static SavingAccount getInstance(){
+        if(Objects.isNull(instance)){
+            synchronized(SavingAccount.class){
+                if(Objects.isNull(instance)){
+                    instance = new SavingAccount();
+                }
+            }
+        }
+        return instance;
+    }
     @Override
     public double addInterest(double balance) {
         if(balance < 1000){

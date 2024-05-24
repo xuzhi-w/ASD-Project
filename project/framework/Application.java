@@ -17,10 +17,10 @@ public class Application {
 
 
 		Account creditcard = new CreditCardAccount("123456",1000, c1);
-		creditcard.setAccountType(new GoldAccount());
+		creditcard.setAccountType(GoldAccount.getInstance());
 
 		Account creditcard1 = new CreditCardAccount("123457",3000, c1);
-		creditcard.setAccountType(new SilverAccount());
+		creditcard.setAccountType(SilverAccount.getInstance());
 
 
 		creditcard.withdraw(200);

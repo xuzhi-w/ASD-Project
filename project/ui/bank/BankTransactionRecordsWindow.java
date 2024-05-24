@@ -27,7 +27,7 @@ public class BankTransactionRecordsWindow extends CommonRecordsWindow {
         // Populate the array with data from the ArrayList
         for (int i=0; i < entries.size(); i++) {
             AccountEntry entry = entries.get(i);
-            data[i][0] = entry.getDate();
+            data[i][0] = entry.getDate().toString();
             data[i][1] = entry.getAmount();
             data[i][2] = entry.getDescription();
             data[i][3] = entry.getFromAccountNumber();
