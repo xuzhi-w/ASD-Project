@@ -260,7 +260,7 @@ public class CardFrm extends javax.swing.JFrame
 		int selection = JTable1.getSelectionModel().getMinSelectionIndex();
 		if(selection != -1){
 			String accountNumber = (String)model.getValueAt(selection, 1);
-			addSomeData(accountNumber);
+			//addSomeData(accountNumber);
 			CommonRecordsWindow recordsWindow = creditCardApplication.
 					createTransactionRecordsWindow(accountNumber);
 		}

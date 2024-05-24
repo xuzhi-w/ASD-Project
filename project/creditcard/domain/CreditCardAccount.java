@@ -68,18 +68,18 @@ public class CreditCardAccount extends Account {
      */
     public CreditCardAccount(String accountNumber, double balance, Customer customer, AccountTypeEnum type) {
         super(accountNumber, balance, customer);
-        setType(type);
-
-        if(type == AccountTypeEnum.GOLD){
-            MI = 0.06;
-            MP = 0.10;
-        }else if (type == AccountTypeEnum.SILVER){
-            MI = 0.08;
-            MP = 0.12;
-        }else if(type == AccountTypeEnum.BRONZE){
-            MI = 0.10;
-            MP = 0.14;
-        }
+//        setType(type);
+//
+//        if(type == AccountTypeEnum.GOLD){
+//            MI = 0.06;
+//            MP = 0.10;
+//        }else if (type == AccountTypeEnum.SILVER){
+//            MI = 0.08;
+//            MP = 0.12;
+//        }else if(type == AccountTypeEnum.BRONZE){
+//            MI = 0.10;
+//            MP = 0.14;
+//        }
         logger.log(Level.INFO,toString());
     }
 
@@ -146,8 +146,8 @@ public class CreditCardAccount extends Account {
                 totalCharges += entry.getAmount();
             }
         }
-        newBalance = previousBalance + totalCredits + totalCharges + MI * (previousBalance+totalCredits);
-        totalDue = Math.ceil(MP * newBalance * 100)/100;
+        newBalance = previousBalance + totalCredits + totalCharges + getAccountType().getMonthlyInterest() * (previousBalance+totalCredits);
+        totalDue = Math.ceil(getAccountType().getMinimumPayment() * newBalance * 100)/100;
         logger.log(Level.INFO,"Report generated:" + toString());
     }
 
