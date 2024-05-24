@@ -10,7 +10,7 @@ public abstract class BankAccount extends Account {
 
 
 	public BankAccount(String accountNumber, double balance, Customer customer) {
-        super(accountNumber, 0, customer);
+        super(accountNumber, balance, customer);
 	}
 
 	@Override

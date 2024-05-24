@@ -3,10 +3,14 @@ package ui.bank;
 import banking.data.BankingAccountDAO;
 import banking.domain.BankAccountTypeEnum;
 import framework.data.AccountDAO;
+import framework.domain.Customer;
+import framework.rule.BalanceChecker;
 import framework.service.AccountService;
 import framework.domain.Account;
 import framework.domain.AccountTypeEnum;
 import framework.utils.CommonRecordsWindow;
+import framework.visitor.MyOperation;
+import framework.visitor.Visitor;
 import ui.BankingApplication;
 import ui.ccard.CardFrm;
 
@@ -15,11 +19,13 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A basic JFC based application.
  */
-public class BankFrm extends javax.swing.JFrame
+public class BankFrm extends javax.swing.JFrame implements MyOperation
 {
 	//Banking Application Instance
 
@@ -27,9 +33,13 @@ public class BankFrm extends javax.swing.JFrame
     /****
      * init variables in the object
      ****/
-	BankingApplication bankingApplication;
+	private static BankingApplication bankingApplication;
 
-    String accountnr, clientName,street,city,zip,state,clientType,amountDeposit, email, birthDate;
+	public static BankingApplication getBankingApplication() {
+		return bankingApplication;
+	}
+
+	String accountnr, clientName,street,city,zip,state,clientType,amountDeposit, email, birthDate;
 	AccountTypeEnum accountType;
     boolean newaccount;
     private static DefaultTableModel model;
@@ -42,7 +52,13 @@ public class BankFrm extends javax.swing.JFrame
 	private Account currentAccount;
 
 	private static volatile BankFrm bankFrm;
-
+	private static Logger logger =  Logger.getLogger("BankApplication");
+	public static Logger getLogger(){
+		if(logger == null){
+			logger = Logger.getLogger("BankApplication");
+		}
+		return logger;
+	}
 	public BankFrm()
 	{
 		myframe = this;
@@ -138,7 +154,9 @@ public class BankFrm extends javax.swing.JFrame
 		    }
 		    
 			//Create a new instance of our application's frame, and make it visible.
-			getBankFrmInstance().setVisible(true);
+			bankFrm = getBankFrmInstance();
+			bankFrm.setVisible(true);
+			new BalanceChecker();
 		} 
 		catch (Throwable t) {
 			t.printStackTrace();
@@ -160,6 +178,9 @@ public class BankFrm extends javax.swing.JFrame
 		return result;
 	}
 
+	public static DefaultTableModel getModel() {
+		return model;
+	}
 
 	javax.swing.JPanel JPanel1 = new javax.swing.JPanel();
 	javax.swing.JButton JButton_PerAC = new javax.swing.JButton();
@@ -184,6 +205,7 @@ public class BankFrm extends javax.swing.JFrame
 
 	class SymWindow extends java.awt.event.WindowAdapter
 	{
+
 		public void windowClosing(java.awt.event.WindowEvent event)
 		{
 			Object object = event.getSource();
@@ -191,11 +213,10 @@ public class BankFrm extends javax.swing.JFrame
 				BankFrm_windowClosing(event);
 		}
 	}
-
 	void BankFrm_windowClosing(java.awt.event.WindowEvent event)
 	{
 		// to do: code goes here.
-			 
+
 		BankFrm_windowClosing_Interaction1(event);
 	}
 
@@ -208,6 +229,7 @@ public class BankFrm extends javax.swing.JFrame
 
 	class SymAction implements java.awt.event.ActionListener
 	{
+
 		public void actionPerformed(java.awt.event.ActionEvent event)
 		{
 			Object object = event.getSource();
@@ -245,22 +267,21 @@ public class BankFrm extends javax.swing.JFrame
 		}
 	}
 
-    
     //When the Exit button is pressed this code gets executed
     //this will exit from the system
-    void JButtonExit_actionPerformed(java.awt.event.ActionEvent event)
+
+	void JButtonExit_actionPerformed(java.awt.event.ActionEvent event)
 	{
 		System.exit(0);
 	}
-
 	void JButtonPerAC_actionPerformed(java.awt.event.ActionEvent event)
 	{
 		/*
 		 JDialog_AddPAcc type object is for adding personal information
-		 construct a JDialog_AddPAcc type object 
-		 set the boundaries and show it 
+		 construct a JDialog_AddPAcc type object
+		 set the boundaries and show it
 		*/
-		
+
 		JDialog_AddPAcc pac = new JDialog_AddPAcc(myframe);
 		pac.setBounds(450, 20, 300, 330);
 		pac.setLocationRelativeTo(null);
@@ -288,22 +309,24 @@ public class BankFrm extends javax.swing.JFrame
 	 */
 	void JButton_GenerateReport_actionPerformed(java.awt.event.ActionEvent event)
 	{
+		logger.log(Level.INFO,"start generating reports");
 		int selection = JTable1.getSelectionModel().getMinSelectionIndex();
 		if(selection != -1){
 			String accountNumber = (String)model.getValueAt(selection, 0);
 			CommonRecordsWindow recordsWindow =
 					new BankTransactionRecordsWindow(bankingApplication.getAccount(accountNumber));
 		}
+		logger.log(Level.INFO,"end generating reports");
 	}
 
 	void JButtonCompAC_actionPerformed(java.awt.event.ActionEvent event)
 	{
 		/*
-		 construct a JDialog_AddCompAcc type object 
-		 set the boundaries and 
-		 show it 
+		 construct a JDialog_AddCompAcc type object
+		 set the boundaries and
+		 show it
 		*/
-		
+
 		JDialog_AddCompAcc pac = new JDialog_AddCompAcc(myframe);
 		pac.setBounds(450, 20, 300, 330);
 		pac.setLocationRelativeTo(null);
@@ -326,8 +349,11 @@ public class BankFrm extends javax.swing.JFrame
         }
 
 	}
+
 	void JButtonDeposit_actionPerformed(java.awt.event.ActionEvent event)
+
 	{
+
 	    // get selected name
         int selection = JTable1.getSelectionModel().getMinSelectionIndex();
 		//System.out.println(selection);
@@ -344,9 +370,10 @@ public class BankFrm extends javax.swing.JFrame
 			bankingApplication.deposit(accnr, deposit);
 			updateAmount(selection, accnr);
 		}
-		
-		
+
+
 	}
+
 
 	void JButtonWithdraw_actionPerformed(java.awt.event.ActionEvent event)
 	{
@@ -370,10 +397,10 @@ public class BankFrm extends javax.swing.JFrame
 				,"Warning: negative balance",JOptionPane.WARNING_MESSAGE);
 			}
 		}
-		
-		
+
+
 	}
-	
+
 	void JButtonAddinterest_actionPerformed(java.awt.event.ActionEvent event)
 	{
 		  JOptionPane.showMessageDialog(JButton_Addinterest, "Add interest to all accounts","Add interest to all accounts",JOptionPane.WARNING_MESSAGE);
@@ -387,5 +414,14 @@ public class BankFrm extends javax.swing.JFrame
 	private void updateAmount(int selectedRow,String accountNumber){
 		double newamount = bankingApplication.getAccountService().getAccount(accountNumber).getBalance();
 		model.setValueAt(String.valueOf(newamount), selectedRow, 5);
+	}
+
+	public JTable getJTable1() {
+		return JTable1;
+	}
+
+	@Override
+	public void action(Visitor visitor,Account account){
+		visitor.visit(this,account);
 	}
 }

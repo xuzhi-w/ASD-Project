@@ -2,9 +2,7 @@ package framework.data;
 
 import framework.domain.Account;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class AccountDAOImpl implements AccountDAO {
     Map<String, Account> accountList = new HashMap<>();

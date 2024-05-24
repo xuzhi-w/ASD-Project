@@ -10,7 +10,18 @@ public class AccountEntry {
 	private String fromPersonName;
 	private TransactionType transactionType;
 
-	
+	@Override
+	public String toString() {
+		return "AccountEntry{" +
+				"date=" + date +
+				", amount=" + amount +
+				", description='" + description + '\'' +
+				", fromAccountNumber='" + fromAccountNumber + '\'' +
+				", fromPersonName='" + fromPersonName + '\'' +
+				", transactionType=" + transactionType +
+				'}';
+	}
+
 	public AccountEntry() {
 	}
 

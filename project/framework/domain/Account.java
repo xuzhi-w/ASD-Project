@@ -38,7 +38,7 @@ public abstract class Account implements Subject{
 	}
 
 	public double getBalance() {
-		double balance = 0;
+		balance = 0;
 		for (AccountEntry entry : entryList) {
 			balance += entry.getAmount();
 		}

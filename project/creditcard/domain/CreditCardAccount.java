@@ -2,6 +2,7 @@ package creditcard.domain;
 
 import framework.domain.*;
 import ui.CreditCardApplication;
+import ui.bank.BankFrm;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -27,7 +28,7 @@ public class CreditCardAccount extends Account {
                 '}';
     }
 
-    Logger logger =  Logger.getLogger("credit application");
+     Logger logger = BankFrm.getLogger();
     private AccountTypeEnum type;
     private double MP;
     private double MI;
@@ -80,7 +81,7 @@ public class CreditCardAccount extends Account {
             MI = 0.10;
             MP = 0.14;
         }
-        logger.log(Level.INFO,toString());
+        logger.log(Level.INFO,"After creation:" + toString());
     }
 
     @Override
@@ -90,7 +91,7 @@ public class CreditCardAccount extends Account {
         if (amount > 400) {
             notifyObservers("Account charged " + amount, getCustomer());
         }
-        logger.log(Level.INFO,toString());
+        logger.log(Level.INFO,"After withdraw: " + toString());
     }
 
     @Override
@@ -98,6 +99,7 @@ public class CreditCardAccount extends Account {
         AccountEntry entry = new AccountEntry(-amount, "Account credited", "", "", TransactionType.DEPOSIT);
         addEntry(entry);
         logger.log(Level.INFO,toString());
+        logger.log(Level.INFO,"After deposit: " + toString());
     }
 
     private double previousBalance = 0.0;

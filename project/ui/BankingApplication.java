@@ -7,6 +7,7 @@ import framework.data.AccountDAOImpl;
 import framework.domain.Account;
 import framework.domain.AccountEntry;
 import framework.domain.AccountTypeEnum;
+import framework.rule.BalanceChecker;
 import framework.service.AccountService;
 import ui.ccard.TransactionRecordsWindow;
 
@@ -14,8 +15,10 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
-public class BankingApplication implements Application{
+public class BankingApplication implements Application {
     private AccountService accountService;
+
+
     public BankingApplication() {
         accountService = new BankAccountService(new AccountDAOImpl());
     }
@@ -34,33 +37,37 @@ public class BankingApplication implements Application{
                                  String zip, AccountTypeEnum accountType, int numberOfEmployees,
                                  BankAccountTypeEnum bankAccountTypeEnum) {
 
-        return accountService.createAccount(accountNumber,balance,name,email,dateOfBirth,street,city,
-                state,zip,accountType,numberOfEmployees,bankAccountTypeEnum);
+        return accountService.createAccount(accountNumber, balance, name, email, dateOfBirth, street, city,
+                state, zip, accountType, numberOfEmployees, bankAccountTypeEnum);
     }
+
     @Override
     public List<AccountEntry> getAccountEntries(String accountNumber) {
         return accountService.getAccount(accountNumber).getEntryList().stream().toList();
     }
+
     @Override
-    public void deposit(String accountNumber, double amount){
+    public void deposit(String accountNumber, double amount) {
         accountService.deposit(accountNumber, amount);
     }
 
     @Override
-    public void withdraw(String accountNumber, double amount){
+    public void withdraw(String accountNumber, double amount) {
         accountService.withdraw(accountNumber, amount);
     }
+
     @Override
-    public Account getAccount(String accountNumber){
+    public Account getAccount(String accountNumber) {
         return accountService.getAccount(accountNumber);
     }
+
     @Override
-    public Collection<Account> getAllAccounts(){
+    public Collection<Account> getAllAccounts() {
         return accountService.getAllAccounts();
     }
 
-    public TransactionRecordsWindow createTransactionRecordsWindow(String accountNumber){
-        CreditCardAccount account = (CreditCardAccount)getAccount(accountNumber);
+    public TransactionRecordsWindow createTransactionRecordsWindow(String accountNumber) {
+        CreditCardAccount account = (CreditCardAccount) getAccount(accountNumber);
         return new TransactionRecordsWindow(account);
     }
 

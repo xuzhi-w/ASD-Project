@@ -19,7 +19,14 @@ public class BankAccountService extends AccountServiceImpl {
         super(accountDAO, new BankAccountCreater());
     }
 
+    private static BankAccountService bankAccountService;
 
+    public  static BankAccountService getInstance(){
+        if(bankAccountService == null){
+            bankAccountService = new BankAccountService(new BankingAccountDAO());
+        }
+        return  bankAccountService;
+    }
     @Override
     public Account createAccount(String accountNumber, double balance, String name, String email, LocalDate dateOfBirth, String street, String city, String state, String zip, AccountTypeEnum accountType, int numberOfEmployees, BankAccountTypeEnum bankAccountTypeEnum) {
         Account account = getAccountFactory().createAccount(accountNumber,balance,name,email,dateOfBirth,street,city,
