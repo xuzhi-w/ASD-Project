@@ -4,7 +4,7 @@ import framework.domain.Account;
 import framework.domain.AccountTypeEnum;
 import framework.domain.Customer;
 
-public class BankAccountCreater extends BankFactory {
+public class BankAccountCreator extends BankFactory {
 
     @Override
     public Account createBankAccount(String accountNumber, double balance, Customer customer, int numberOfEmployees, BankAccountTypeEnum bankAccountTypeEnum) {
@@ -19,9 +19,9 @@ public class BankAccountCreater extends BankFactory {
     @Override
     public void setBankAccountType(Account account, AccountTypeEnum accountTypeEnum) {
         if (accountTypeEnum == AccountTypeEnum.CHECKING){
-            account.setAccountType(checkingAccount);
+            account.setAccountType(CheckingAccount.getInstance());
         } else if (accountTypeEnum == AccountTypeEnum.SAVINGS) {
-            account.setAccountType(savingAccount);
+            account.setAccountType(SavingAccount.getInstance());
         }
     }
 }

@@ -6,8 +6,6 @@ import java.time.LocalDate;
 
 public abstract class BankFactory implements AccountFactory {
 
-    AccountType checkingAccount = new CheckingAccount();
-    AccountType savingAccount = new SavingAccount();
 
     @Override
     public Account createAccount(String accountNumber, double balance, String name, String email,
