@@ -3,11 +3,15 @@ package framework.service;
 import framework.data.AccountDAO;
 import framework.domain.Account;
 import framework.domain.AccountFactory;
-import framework.domain.AccountTypeEnum;
-import framework.domain.Customer;
+import framework.rule.ChargeMonthlyFeeRule;
+import framework.rule.MayPromotionRule;
+import framework.rule.Rule;
+import framework.visitor.RefreshVisitor;
+import framework.visitor.Visitor;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public abstract class AccountServiceImpl implements AccountService {
 
@@ -67,4 +71,22 @@ public abstract class AccountServiceImpl implements AccountService {
     public AccountDAO getAccountDAO() {
         return accountDAO;
     }
+
+    public List<Rule> getAllRules(){
+        List<Rule> ruleList = new ArrayList<>();
+        Rule balanceRule = new MayPromotionRule();
+        Rule ChargeMonthlyFeeRule = new ChargeMonthlyFeeRule();
+        ruleList.add(balanceRule);
+        ruleList.add(ChargeMonthlyFeeRule);
+        return ruleList;
+    }
+
+    public List<Visitor> getAllVisitors(){
+        List<Visitor> visitorList = new ArrayList<>();
+        Visitor refreshVisitor = new RefreshVisitor();
+        visitorList.add(refreshVisitor);
+
+        return visitorList;
+    }
+
 }
